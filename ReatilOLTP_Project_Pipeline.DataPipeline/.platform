@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "DataPipeline",
+    "displayName": "ReatilOLTP_Project_Pipeline"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "f0d24a98-9072-9c11-4732-c9f32f0a0f38"
+  }
+}

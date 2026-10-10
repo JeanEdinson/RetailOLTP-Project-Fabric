@@ -1,0 +1,25 @@
+{
+  "properties": {
+    "activities": [
+      {
+        "type": "InvokeCopyJob",
+        "typeProperties": {
+          "copyJobId": "824ef581-e334-a036-45db-f5881b3f89ff",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
+        },
+        "externalReferences": {
+          "connection": "4488a7b9-17e5-41f8-b05e-eacf7d319d75"
+        },
+        "policy": {
+          "timeout": "0.1:00:00",
+          "retry": 2,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Ingest_Bronze",
+        "dependsOn": []
+      }
+    ]
+  }
+}

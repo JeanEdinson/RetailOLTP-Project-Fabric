@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Lakehouse",
+    "displayName": "RetailOLTP_Project_Bronze_Silver"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "4b60893a-9fe5-b32a-4cc4-301b15094689"
+  }
+}
