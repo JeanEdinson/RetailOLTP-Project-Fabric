@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Dataflow",
+    "displayName": "RetailOLTP_Silver_Ingestion"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "d4f694ba-3b5f-a31e-47ab-a4a94ce705af"
+  }
+}

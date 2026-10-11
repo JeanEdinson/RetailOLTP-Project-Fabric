@@ -61,7 +61,32 @@
         },
         "enableStaging": false,
         "translator": {
-          "type": "TabularTranslator"
+          "type": "TabularTranslator",
+          "mappings": [
+            {
+              "source": {
+                "name": "CategoryID",
+                "type": "Int32",
+                "physicalType": "int"
+              },
+              "destination": {
+                "name": "CategoryID",
+                "physicalType": "integer"
+              }
+            },
+            {
+              "source": {
+                "name": "CategoryName",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "100"
+              },
+              "destination": {
+                "name": "CategoryName",
+                "physicalType": "string"
+              }
+            }
+          ]
         },
         "typeConversionSettings": {
           "typeConversion": {
@@ -101,7 +126,126 @@
         },
         "enableStaging": false,
         "translator": {
-          "type": "TabularTranslator"
+          "type": "TabularTranslator",
+          "mappings": [
+            {
+              "source": {
+                "name": "CustomerAddressID",
+                "type": "Int32",
+                "physicalType": "int"
+              },
+              "destination": {
+                "name": "CustomerAddressID",
+                "physicalType": "integer"
+              }
+            },
+            {
+              "source": {
+                "name": "CustomerID",
+                "type": "Int32",
+                "physicalType": "int"
+              },
+              "destination": {
+                "name": "CustomerID",
+                "physicalType": "integer"
+              }
+            },
+            {
+              "source": {
+                "name": "AddressType",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "30"
+              },
+              "destination": {
+                "name": "AddressType",
+                "physicalType": "string"
+              }
+            },
+            {
+              "source": {
+                "name": "AddressLine1",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "200"
+              },
+              "destination": {
+                "name": "AddressLine1",
+                "physicalType": "string"
+              }
+            },
+            {
+              "source": {
+                "name": "AddressLine2",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "200"
+              },
+              "destination": {
+                "name": "AddressLine2",
+                "physicalType": "string"
+              }
+            },
+            {
+              "source": {
+                "name": "City",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "100"
+              },
+              "destination": {
+                "name": "City",
+                "physicalType": "string"
+              }
+            },
+            {
+              "source": {
+                "name": "State",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "100"
+              },
+              "destination": {
+                "name": "State",
+                "physicalType": "string"
+              }
+            },
+            {
+              "source": {
+                "name": "PostalCode",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "20"
+              },
+              "destination": {
+                "name": "PostalCode",
+                "physicalType": "string"
+              }
+            },
+            {
+              "source": {
+                "name": "Country",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "100"
+              },
+              "destination": {
+                "name": "Country",
+                "physicalType": "string"
+              }
+            },
+            {
+              "source": {
+                "name": "IsPrimary",
+                "type": "Boolean",
+                "physicalType": "bit"
+              },
+              "destination": {
+                "name": "IsPrimary",
+                "physicalType": "boolean"
+              }
+            }
+          ]
         },
         "typeConversionSettings": {
           "typeConversion": {
@@ -141,7 +285,125 @@
         },
         "enableStaging": false,
         "translator": {
-          "type": "TabularTranslator"
+          "type": "TabularTranslator",
+          "mappings": [
+            {
+              "source": {
+                "name": "CustomerID",
+                "type": "Int32",
+                "physicalType": "int"
+              },
+              "destination": {
+                "name": "CustomerID",
+                "physicalType": "integer"
+              }
+            },
+            {
+              "source": {
+                "name": "CustomerSegmentID",
+                "type": "Int32",
+                "physicalType": "int"
+              },
+              "destination": {
+                "name": "CustomerSegmentID",
+                "physicalType": "integer"
+              }
+            },
+            {
+              "source": {
+                "name": "FirstName",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "100"
+              },
+              "destination": {
+                "name": "FirstName",
+                "physicalType": "string"
+              }
+            },
+            {
+              "source": {
+                "name": "LastName",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "100"
+              },
+              "destination": {
+                "name": "LastName",
+                "physicalType": "string"
+              }
+            },
+            {
+              "source": {
+                "name": "Email",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "150"
+              },
+              "destination": {
+                "name": "Email",
+                "physicalType": "string"
+              }
+            },
+            {
+              "source": {
+                "name": "Phone",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "30"
+              },
+              "destination": {
+                "name": "Phone",
+                "physicalType": "string"
+              }
+            },
+            {
+              "source": {
+                "name": "BirthDate",
+                "type": "DateTime",
+                "physicalType": "date"
+              },
+              "destination": {
+                "name": "BirthDate",
+                "physicalType": "date"
+              }
+            },
+            {
+              "source": {
+                "name": "Gender",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "20"
+              },
+              "destination": {
+                "name": "Gender",
+                "physicalType": "string"
+              }
+            },
+            {
+              "source": {
+                "name": "RegistrationDate",
+                "type": "DateTime",
+                "physicalType": "date"
+              },
+              "destination": {
+                "name": "RegistrationDate",
+                "physicalType": "date"
+              }
+            },
+            {
+              "source": {
+                "name": "Status",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "30"
+              },
+              "destination": {
+                "name": "Status",
+                "physicalType": "string"
+              }
+            }
+          ]
         },
         "typeConversionSettings": {
           "typeConversion": {
@@ -181,7 +443,32 @@
         },
         "enableStaging": false,
         "translator": {
-          "type": "TabularTranslator"
+          "type": "TabularTranslator",
+          "mappings": [
+            {
+              "source": {
+                "name": "CustomerSegmentID",
+                "type": "Int32",
+                "physicalType": "int"
+              },
+              "destination": {
+                "name": "CustomerSegmentID",
+                "physicalType": "integer"
+              }
+            },
+            {
+              "source": {
+                "name": "SegmentName",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "100"
+              },
+              "destination": {
+                "name": "SegmentName",
+                "physicalType": "string"
+              }
+            }
+          ]
         },
         "typeConversionSettings": {
           "typeConversion": {
@@ -221,127 +508,102 @@
         },
         "enableStaging": false,
         "translator": {
-          "type": "TabularTranslator"
-        },
-        "typeConversionSettings": {
-          "typeConversion": {
-            "allowDataTruncation": true,
-            "treatBooleanAsNumber": false
-          }
-        }
-      }
-    },
-    {
-      "id": "2d4f5171-c2b9-4e80-a137-be29c374ab81",
-      "properties": {
-        "source": {
-          "datasetSettings": {
-            "schema": "dbo",
-            "table": "OrderDetails"
-          },
-          "changeReadStrategy": "Batch",
-          "partitionSettings": {
-            "partitionOption": "None"
-          }
-        },
-        "destination": {
-          "upsertSettings": {
-            "keys": [
-              "OrderDetailID"
-            ]
-          },
-          "writeBehavior": "Upsert",
-          "datasetSettings": {
-            "schema": "Bronze_Layer",
-            "table": "OrderDetails"
-          },
-          "applyVOrder": true,
-          "enableTimestampNtz": false,
-          "enableChangeDataFeed": false
-        },
-        "enableStaging": false,
-        "translator": {
-          "type": "TabularTranslator"
-        },
-        "typeConversionSettings": {
-          "typeConversion": {
-            "allowDataTruncation": true,
-            "treatBooleanAsNumber": false
-          }
-        }
-      }
-    },
-    {
-      "id": "7a7f9b2e-8568-45ef-b35c-ffe3b2a3ddaf",
-      "properties": {
-        "source": {
-          "datasetSettings": {
-            "schema": "dbo",
-            "table": "Orders"
-          },
-          "changeReadStrategy": "Batch",
-          "partitionSettings": {
-            "partitionOption": "None"
-          }
-        },
-        "destination": {
-          "upsertSettings": {
-            "keys": [
-              "OrderID"
-            ]
-          },
-          "writeBehavior": "Upsert",
-          "datasetSettings": {
-            "schema": "Bronze_Layer",
-            "table": "Orders"
-          },
-          "applyVOrder": true,
-          "enableTimestampNtz": false,
-          "enableChangeDataFeed": false
-        },
-        "enableStaging": false,
-        "translator": {
-          "type": "TabularTranslator"
-        },
-        "typeConversionSettings": {
-          "typeConversion": {
-            "allowDataTruncation": true,
-            "treatBooleanAsNumber": false
-          }
-        }
-      }
-    },
-    {
-      "id": "9869a27c-8b00-4d09-85f2-addcebea3b42",
-      "properties": {
-        "source": {
-          "datasetSettings": {
-            "schema": "dbo",
-            "table": "Payments"
-          },
-          "changeReadStrategy": "Batch",
-          "partitionSettings": {
-            "partitionOption": "None"
-          }
-        },
-        "destination": {
-          "upsertSettings": {
-            "keys": [
-              "PaymentID"
-            ]
-          },
-          "writeBehavior": "Upsert",
-          "datasetSettings": {
-            "schema": "Bronze_Layer",
-            "table": "Payments"
-          },
-          "applyVOrder": true,
-          "enableTimestampNtz": false,
-          "enableChangeDataFeed": false
-        },
-        "enableStaging": false,
-        "translator": {
-          "type": "TabularTranslator"
+          "type": "TabularTranslator",
+          "mappings": [
+            {
+              "source": {
+                "name": "EmployeeID",
+                "type": "Int32",
+                "physicalType": "int"
+              },
+              "destination": {
+                "name": "EmployeeID",
+                "physicalType": "integer"
+              }
+            },
+            {
+              "source": {
+                "name": "StoreID",
+                "type": "Int32",
+                "physicalType": "int"
+              },
+              "destination": {
+                "name": "StoreID",
+                "physicalType": "integer"
+              }
+            },
+            {
+              "source": {
+                "name": "FirstName",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "100"
+              },
+              "destination": {
+                "name": "FirstName",
+                "physicalType": "string"
+              }
+            },
+            {
+              "source": {
+                "name": "LastName",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "100"
+              },
+              "destination": {
+                "name": "LastName",
+                "physicalType": "string"
+              }
+            },
+            {
+              "source": {
+                "name": "Email",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "150"
+              },
+              "destination": {
+                "name": "Email",
+                "physicalType": "string"
+              }
+            },
+            {
+              "source": {
+                "name": "JobTitle",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "100"
+              },
+              "destination": {
+                "name": "JobTitle",
+                "physicalType": "string"
+              }
+            },
+            {
+              "source": {
+                "name": "HireDate",
+                "type": "DateTime",
+                "physicalType": "date"
+              },
+              "destination": {
+                "name": "HireDate",
+                "physicalType": "date"
+              }
+            },
+            {
+              "source": {
+                "name": "Status",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "30"
+              },
+              "destination": {
+                "name": "Status",
+                "physicalType": "string"
+              }
+            }
+          ]
         },
         "typeConversionSettings": {
           "typeConversion": {
@@ -381,47 +643,119 @@
         },
         "enableStaging": false,
         "translator": {
-          "type": "TabularTranslator"
-        },
-        "typeConversionSettings": {
-          "typeConversion": {
-            "allowDataTruncation": true,
-            "treatBooleanAsNumber": false
-          }
-        }
-      }
-    },
-    {
-      "id": "2d7d8af1-350a-4b75-a1f2-28d2aa40abd2",
-      "properties": {
-        "source": {
-          "datasetSettings": {
-            "schema": "dbo",
-            "table": "Returns"
-          },
-          "changeReadStrategy": "Batch",
-          "partitionSettings": {
-            "partitionOption": "None"
-          }
-        },
-        "destination": {
-          "upsertSettings": {
-            "keys": [
-              "ReturnID"
-            ]
-          },
-          "writeBehavior": "Upsert",
-          "datasetSettings": {
-            "schema": "Bronze_Layer",
-            "table": "Returns"
-          },
-          "applyVOrder": true,
-          "enableTimestampNtz": false,
-          "enableChangeDataFeed": false
-        },
-        "enableStaging": false,
-        "translator": {
-          "type": "TabularTranslator"
+          "type": "TabularTranslator",
+          "mappings": [
+            {
+              "source": {
+                "name": "ProductID",
+                "type": "Int32",
+                "physicalType": "int"
+              },
+              "destination": {
+                "name": "ProductID",
+                "physicalType": "integer"
+              }
+            },
+            {
+              "source": {
+                "name": "CategoryID",
+                "type": "Int32",
+                "physicalType": "int"
+              },
+              "destination": {
+                "name": "CategoryID",
+                "physicalType": "integer"
+              }
+            },
+            {
+              "source": {
+                "name": "SupplierID",
+                "type": "Int32",
+                "physicalType": "int"
+              },
+              "destination": {
+                "name": "SupplierID",
+                "physicalType": "integer"
+              }
+            },
+            {
+              "source": {
+                "name": "SKU",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "50"
+              },
+              "destination": {
+                "name": "SKU",
+                "physicalType": "string"
+              }
+            },
+            {
+              "source": {
+                "name": "ProductName",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "150"
+              },
+              "destination": {
+                "name": "ProductName",
+                "physicalType": "string"
+              }
+            },
+            {
+              "source": {
+                "name": "UnitPrice",
+                "type": "Decimal",
+                "physicalType": "decimal",
+                "scale": 2,
+                "precision": 18
+              },
+              "destination": {
+                "name": "UnitPrice",
+                "physicalType": "decimal",
+                "scale": 2,
+                "precision": 18
+              }
+            },
+            {
+              "source": {
+                "name": "CostPrice",
+                "type": "Decimal",
+                "physicalType": "decimal",
+                "scale": 2,
+                "precision": 18
+              },
+              "destination": {
+                "name": "CostPrice",
+                "physicalType": "decimal",
+                "scale": 2,
+                "precision": 18
+              }
+            },
+            {
+              "source": {
+                "name": "UnitsPerPackage",
+                "type": "Int32",
+                "physicalType": "int"
+              },
+              "destination": {
+                "name": "UnitsPerPackage",
+                "physicalType": "integer"
+              }
+            },
+            {
+              "source": {
+                "name": "Status",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "30"
+              },
+              "destination": {
+                "name": "Status",
+                "physicalType": "string"
+              }
+            }
+          ]
         },
         "typeConversionSettings": {
           "typeConversion": {
@@ -461,7 +795,127 @@
         },
         "enableStaging": false,
         "translator": {
-          "type": "TabularTranslator"
+          "type": "TabularTranslator",
+          "mappings": [
+            {
+              "source": {
+                "name": "StoreID",
+                "type": "Int32",
+                "physicalType": "int"
+              },
+              "destination": {
+                "name": "StoreID",
+                "physicalType": "integer"
+              }
+            },
+            {
+              "source": {
+                "name": "StoreCode",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "20"
+              },
+              "destination": {
+                "name": "StoreCode",
+                "physicalType": "string"
+              }
+            },
+            {
+              "source": {
+                "name": "StoreName",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "100"
+              },
+              "destination": {
+                "name": "StoreName",
+                "physicalType": "string"
+              }
+            },
+            {
+              "source": {
+                "name": "Address",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "200"
+              },
+              "destination": {
+                "name": "Address",
+                "physicalType": "string"
+              }
+            },
+            {
+              "source": {
+                "name": "City",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "100"
+              },
+              "destination": {
+                "name": "City",
+                "physicalType": "string"
+              }
+            },
+            {
+              "source": {
+                "name": "State",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "100"
+              },
+              "destination": {
+                "name": "State",
+                "physicalType": "string"
+              }
+            },
+            {
+              "source": {
+                "name": "Country",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "100"
+              },
+              "destination": {
+                "name": "Country",
+                "physicalType": "string"
+              }
+            },
+            {
+              "source": {
+                "name": "OpeningDate",
+                "type": "DateTime",
+                "physicalType": "date"
+              },
+              "destination": {
+                "name": "OpeningDate",
+                "physicalType": "date"
+              }
+            },
+            {
+              "source": {
+                "name": "StoreType",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "30"
+              },
+              "destination": {
+                "name": "StoreType",
+                "physicalType": "string"
+              }
+            },
+            {
+              "source": {
+                "name": "Status",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "30"
+              },
+              "destination": {
+                "name": "Status",
+                "physicalType": "string"
+              }
+            }
+          ]
         },
         "typeConversionSettings": {
           "typeConversion": {
@@ -501,7 +955,691 @@
         },
         "enableStaging": false,
         "translator": {
-          "type": "TabularTranslator"
+          "type": "TabularTranslator",
+          "mappings": [
+            {
+              "source": {
+                "name": "SupplierID",
+                "type": "Int32",
+                "physicalType": "int"
+              },
+              "destination": {
+                "name": "SupplierID",
+                "physicalType": "integer"
+              }
+            },
+            {
+              "source": {
+                "name": "SupplierName",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "150"
+              },
+              "destination": {
+                "name": "SupplierName",
+                "physicalType": "string"
+              }
+            },
+            {
+              "source": {
+                "name": "ContactName",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "150"
+              },
+              "destination": {
+                "name": "ContactName",
+                "physicalType": "string"
+              }
+            },
+            {
+              "source": {
+                "name": "Email",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "150"
+              },
+              "destination": {
+                "name": "Email",
+                "physicalType": "string"
+              }
+            },
+            {
+              "source": {
+                "name": "Phone",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "30"
+              },
+              "destination": {
+                "name": "Phone",
+                "physicalType": "string"
+              }
+            },
+            {
+              "source": {
+                "name": "City",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "100"
+              },
+              "destination": {
+                "name": "City",
+                "physicalType": "string"
+              }
+            },
+            {
+              "source": {
+                "name": "Country",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "100"
+              },
+              "destination": {
+                "name": "Country",
+                "physicalType": "string"
+              }
+            }
+          ]
+        },
+        "typeConversionSettings": {
+          "typeConversion": {
+            "allowDataTruncation": true,
+            "treatBooleanAsNumber": false
+          }
+        }
+      }
+    },
+    {
+      "id": "d4c11188-efd0-4dea-b7ae-389df6f7e1bb",
+      "properties": {
+        "source": {
+          "datasetSettings": {
+            "schema": "dbo",
+            "table": "OrderDetails"
+          },
+          "changeReadStrategy": "Batch",
+          "partitionSettings": {
+            "partitionOption": "None"
+          }
+        },
+        "destination": {
+          "upsertSettings": {
+            "keys": [
+              "OrderDetailID"
+            ]
+          },
+          "writeBehavior": "Upsert",
+          "datasetSettings": {
+            "schema": "Bronze_Layer",
+            "table": "OrderDetails"
+          },
+          "applyVOrder": false,
+          "enableTimestampNtz": false,
+          "enableChangeDataFeed": false
+        },
+        "enableStaging": false,
+        "translator": {
+          "type": "TabularTranslator",
+          "mappings": [
+            {
+              "source": {
+                "name": "OrderDetailID",
+                "type": "Int64",
+                "physicalType": "bigint"
+              },
+              "destination": {
+                "name": "OrderDetailID",
+                "physicalType": "long"
+              }
+            },
+            {
+              "source": {
+                "name": "OrderID",
+                "type": "Int64",
+                "physicalType": "bigint"
+              },
+              "destination": {
+                "name": "OrderID",
+                "physicalType": "long"
+              }
+            },
+            {
+              "source": {
+                "name": "ProductID",
+                "type": "Int32",
+                "physicalType": "int"
+              },
+              "destination": {
+                "name": "ProductID",
+                "physicalType": "integer"
+              }
+            },
+            {
+              "source": {
+                "name": "Quantity",
+                "type": "Int32",
+                "physicalType": "int"
+              },
+              "destination": {
+                "name": "Quantity",
+                "physicalType": "integer"
+              }
+            },
+            {
+              "source": {
+                "name": "UnitPrice",
+                "type": "Decimal",
+                "physicalType": "decimal",
+                "scale": 2,
+                "precision": 18
+              },
+              "destination": {
+                "name": "UnitPrice",
+                "physicalType": "decimal",
+                "scale": 2,
+                "precision": 18
+              }
+            },
+            {
+              "source": {
+                "name": "DiscountPercent",
+                "type": "Decimal",
+                "physicalType": "decimal",
+                "scale": 2,
+                "precision": 5
+              },
+              "destination": {
+                "name": "DiscountPercent",
+                "physicalType": "decimal",
+                "scale": 2,
+                "precision": 5
+              }
+            },
+            {
+              "source": {
+                "name": "DiscountAmount",
+                "type": "Decimal",
+                "physicalType": "decimal",
+                "scale": 2,
+                "precision": 18
+              },
+              "destination": {
+                "name": "DiscountAmount",
+                "physicalType": "decimal",
+                "scale": 2,
+                "precision": 18
+              }
+            },
+            {
+              "source": {
+                "name": "TaxAmount",
+                "type": "Decimal",
+                "physicalType": "decimal",
+                "scale": 2,
+                "precision": 18
+              },
+              "destination": {
+                "name": "TaxAmount",
+                "physicalType": "decimal",
+                "scale": 2,
+                "precision": 18
+              }
+            },
+            {
+              "source": {
+                "name": "LineTotal",
+                "type": "Decimal",
+                "physicalType": "decimal",
+                "scale": 2,
+                "precision": 18
+              },
+              "destination": {
+                "name": "LineTotal",
+                "physicalType": "decimal",
+                "scale": 2,
+                "precision": 18
+              }
+            }
+          ]
+        },
+        "typeConversionSettings": {
+          "typeConversion": {
+            "allowDataTruncation": true,
+            "treatBooleanAsNumber": false
+          }
+        }
+      }
+    },
+    {
+      "id": "3bfee7ef-c8d1-42ed-a71e-5cb31541e82e",
+      "properties": {
+        "source": {
+          "datasetSettings": {
+            "schema": "dbo",
+            "table": "Orders"
+          },
+          "changeReadStrategy": "Batch",
+          "partitionSettings": {
+            "partitionOption": "None"
+          }
+        },
+        "destination": {
+          "upsertSettings": {
+            "keys": [
+              "OrderID"
+            ]
+          },
+          "writeBehavior": "Upsert",
+          "datasetSettings": {
+            "schema": "Bronze_Layer",
+            "table": "Orders"
+          },
+          "applyVOrder": false,
+          "enableTimestampNtz": false,
+          "enableChangeDataFeed": false
+        },
+        "enableStaging": false,
+        "translator": {
+          "type": "TabularTranslator",
+          "mappings": [
+            {
+              "source": {
+                "name": "OrderID",
+                "type": "Int64",
+                "physicalType": "bigint"
+              },
+              "destination": {
+                "name": "OrderID",
+                "physicalType": "long"
+              }
+            },
+            {
+              "source": {
+                "name": "CustomerID",
+                "type": "Int32",
+                "physicalType": "int"
+              },
+              "destination": {
+                "name": "CustomerID",
+                "physicalType": "integer"
+              }
+            },
+            {
+              "source": {
+                "name": "StoreID",
+                "type": "Int32",
+                "physicalType": "int"
+              },
+              "destination": {
+                "name": "StoreID",
+                "physicalType": "integer"
+              }
+            },
+            {
+              "source": {
+                "name": "EmployeeID",
+                "type": "Int32",
+                "physicalType": "int"
+              },
+              "destination": {
+                "name": "EmployeeID",
+                "physicalType": "integer"
+              }
+            },
+            {
+              "source": {
+                "name": "OrderDate",
+                "type": "DateTime",
+                "physicalType": "datetime2",
+                "precision": 0
+              },
+              "destination": {
+                "name": "OrderDate",
+                "physicalType": "timestamp"
+              }
+            },
+            {
+              "source": {
+                "name": "OrderStatus",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "30"
+              },
+              "destination": {
+                "name": "OrderStatus",
+                "physicalType": "string"
+              }
+            },
+            {
+              "source": {
+                "name": "Subtotal",
+                "type": "Decimal",
+                "physicalType": "decimal",
+                "scale": 2,
+                "precision": 18
+              },
+              "destination": {
+                "name": "Subtotal",
+                "physicalType": "decimal",
+                "scale": 2,
+                "precision": 18
+              }
+            },
+            {
+              "source": {
+                "name": "DiscountAmount",
+                "type": "Decimal",
+                "physicalType": "decimal",
+                "scale": 2,
+                "precision": 18
+              },
+              "destination": {
+                "name": "DiscountAmount",
+                "physicalType": "decimal",
+                "scale": 2,
+                "precision": 18
+              }
+            },
+            {
+              "source": {
+                "name": "TaxAmount",
+                "type": "Decimal",
+                "physicalType": "decimal",
+                "scale": 2,
+                "precision": 18
+              },
+              "destination": {
+                "name": "TaxAmount",
+                "physicalType": "decimal",
+                "scale": 2,
+                "precision": 18
+              }
+            },
+            {
+              "source": {
+                "name": "ShippingAmount",
+                "type": "Decimal",
+                "physicalType": "decimal",
+                "scale": 2,
+                "precision": 18
+              },
+              "destination": {
+                "name": "ShippingAmount",
+                "physicalType": "decimal",
+                "scale": 2,
+                "precision": 18
+              }
+            },
+            {
+              "source": {
+                "name": "TotalAmount",
+                "type": "Decimal",
+                "physicalType": "decimal",
+                "scale": 2,
+                "precision": 18
+              },
+              "destination": {
+                "name": "TotalAmount",
+                "physicalType": "decimal",
+                "scale": 2,
+                "precision": 18
+              }
+            }
+          ]
+        },
+        "typeConversionSettings": {
+          "typeConversion": {
+            "allowDataTruncation": true,
+            "treatBooleanAsNumber": false
+          }
+        }
+      }
+    },
+    {
+      "id": "49d736bb-c608-4bf4-a33e-1317e07bbf79",
+      "properties": {
+        "source": {
+          "datasetSettings": {
+            "schema": "dbo",
+            "table": "Payments"
+          },
+          "changeReadStrategy": "Batch",
+          "partitionSettings": {
+            "partitionOption": "None"
+          }
+        },
+        "destination": {
+          "upsertSettings": {
+            "keys": [
+              "PaymentID"
+            ]
+          },
+          "writeBehavior": "Upsert",
+          "datasetSettings": {
+            "schema": "Bronze_Layer",
+            "table": "Payments"
+          },
+          "applyVOrder": false,
+          "enableTimestampNtz": false,
+          "enableChangeDataFeed": false
+        },
+        "enableStaging": false,
+        "translator": {
+          "type": "TabularTranslator",
+          "mappings": [
+            {
+              "source": {
+                "name": "PaymentID",
+                "type": "Int64",
+                "physicalType": "bigint"
+              },
+              "destination": {
+                "name": "PaymentID",
+                "physicalType": "long"
+              }
+            },
+            {
+              "source": {
+                "name": "OrderID",
+                "type": "Int64",
+                "physicalType": "bigint"
+              },
+              "destination": {
+                "name": "OrderID",
+                "physicalType": "long"
+              }
+            },
+            {
+              "source": {
+                "name": "PaymentDate",
+                "type": "DateTime",
+                "physicalType": "datetime2",
+                "precision": 0
+              },
+              "destination": {
+                "name": "PaymentDate",
+                "physicalType": "timestamp"
+              }
+            },
+            {
+              "source": {
+                "name": "PaymentMethod",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "50"
+              },
+              "destination": {
+                "name": "PaymentMethod",
+                "physicalType": "string"
+              }
+            },
+            {
+              "source": {
+                "name": "PaymentStatus",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "30"
+              },
+              "destination": {
+                "name": "PaymentStatus",
+                "physicalType": "string"
+              }
+            },
+            {
+              "source": {
+                "name": "Amount",
+                "type": "Decimal",
+                "physicalType": "decimal",
+                "scale": 2,
+                "precision": 18
+              },
+              "destination": {
+                "name": "Amount",
+                "physicalType": "decimal",
+                "scale": 2,
+                "precision": 18
+              }
+            },
+            {
+              "source": {
+                "name": "TransactionReference",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "100"
+              },
+              "destination": {
+                "name": "TransactionReference",
+                "physicalType": "string"
+              }
+            }
+          ]
+        },
+        "typeConversionSettings": {
+          "typeConversion": {
+            "allowDataTruncation": true,
+            "treatBooleanAsNumber": false
+          }
+        }
+      }
+    },
+    {
+      "id": "185c6628-4fef-4c01-a4c9-5c241f247e29",
+      "properties": {
+        "source": {
+          "datasetSettings": {
+            "schema": "dbo",
+            "table": "Returns"
+          },
+          "changeReadStrategy": "Batch",
+          "partitionSettings": {
+            "partitionOption": "None"
+          }
+        },
+        "destination": {
+          "upsertSettings": {
+            "keys": [
+              "ReturnID"
+            ]
+          },
+          "writeBehavior": "Upsert",
+          "datasetSettings": {
+            "schema": "Bronze_Layer",
+            "table": "Returns"
+          },
+          "applyVOrder": false,
+          "enableTimestampNtz": false,
+          "enableChangeDataFeed": false
+        },
+        "enableStaging": false,
+        "translator": {
+          "type": "TabularTranslator",
+          "mappings": [
+            {
+              "source": {
+                "name": "ReturnID",
+                "type": "Int64",
+                "physicalType": "bigint"
+              },
+              "destination": {
+                "name": "ReturnID",
+                "physicalType": "long"
+              }
+            },
+            {
+              "source": {
+                "name": "OrderDetailID",
+                "type": "Int64",
+                "physicalType": "bigint"
+              },
+              "destination": {
+                "name": "OrderDetailID",
+                "physicalType": "long"
+              }
+            },
+            {
+              "source": {
+                "name": "ReturnDate",
+                "type": "DateTime",
+                "physicalType": "datetime2",
+                "precision": 0
+              },
+              "destination": {
+                "name": "ReturnDate",
+                "physicalType": "timestamp"
+              }
+            },
+            {
+              "source": {
+                "name": "Quantity",
+                "type": "Int32",
+                "physicalType": "int"
+              },
+              "destination": {
+                "name": "Quantity",
+                "physicalType": "integer"
+              }
+            },
+            {
+              "source": {
+                "name": "ReturnReason",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "100"
+              },
+              "destination": {
+                "name": "ReturnReason",
+                "physicalType": "string"
+              }
+            },
+            {
+              "source": {
+                "name": "RefundAmount",
+                "type": "Decimal",
+                "physicalType": "decimal",
+                "scale": 2,
+                "precision": 18
+              },
+              "destination": {
+                "name": "RefundAmount",
+                "physicalType": "decimal",
+                "scale": 2,
+                "precision": 18
+              }
+            },
+            {
+              "source": {
+                "name": "ReturnStatus",
+                "type": "String",
+                "physicalType": "varchar",
+                "length": "30"
+              },
+              "destination": {
+                "name": "ReturnStatus",
+                "physicalType": "string"
+              }
+            }
+          ]
         },
         "typeConversionSettings": {
           "typeConversion": {
