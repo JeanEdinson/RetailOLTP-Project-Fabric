@@ -6,11 +6,6 @@
   "name": "RetailOLTP_Silver_Ingestion",
   "queryGroups": [
     {
-      "id": "be2ef31a-e97b-4287-920f-791249d620dd",
-      "name": "Mapping Tables",
-      "description": ""
-    },
-    {
       "id": "56ce47ab-aede-41af-a252-974d6d507942",
       "name": "Categories",
       "description": ""
@@ -20,6 +15,42 @@
       "name": "Suppliers",
       "description": "",
       "order": 1
+    },
+    {
+      "id": "4658f40d-5b07-4875-9895-7283c8e4d6ad",
+      "name": "Products",
+      "description": "",
+      "order": 2
+    },
+    {
+      "id": "88900226-e872-4c16-837d-97054c739a46",
+      "name": "CustomerSegments",
+      "description": "",
+      "order": 3
+    },
+    {
+      "id": "3af74248-662a-4aad-9cdf-e79f225800c5",
+      "name": "Customers",
+      "description": "",
+      "order": 4
+    },
+    {
+      "id": "44cf0a9c-6566-49ee-8baa-a343f8e81f41",
+      "name": "CustomerAddresses",
+      "description": "",
+      "order": 5
+    },
+    {
+      "id": "8c7424c5-8d7f-4df7-9bed-705796d472ac",
+      "name": "Stores",
+      "description": "",
+      "order": 6
+    },
+    {
+      "id": "e138fef1-e8ce-410e-8c7f-545f48f6a919",
+      "name": "Employees",
+      "description": "",
+      "order": 7
     }
   ],
   "documentLocale": "es-ES",
@@ -40,44 +71,75 @@
       "queryName": "Bronze_Layer Suppliers",
       "queryGroupId": "648b3bbe-be87-4a75-a1c6-1d5cf63dd219"
     },
-    "Mapping CustomerSegments": {
-      "queryId": "8952ca9c-a0f1-4f9f-94d4-71087a25f55d",
-      "queryName": "Mapping CustomerSegments",
-      "queryGroupId": "be2ef31a-e97b-4287-920f-791249d620dd"
+    "Bronze_Layer Products": {
+      "queryId": "5688f5cf-0523-4e80-9ae0-55c0139472b4",
+      "queryName": "Bronze_Layer Products",
+      "queryGroupId": "4658f40d-5b07-4875-9895-7283c8e4d6ad"
     },
-    "Mapping Customers": {
-      "queryId": "8cf5c824-bc87-485b-9340-d1a8c43e00ce",
-      "queryName": "Mapping Customers",
-      "queryGroupId": "be2ef31a-e97b-4287-920f-791249d620dd",
+    "Silver_Layer Products": {
+      "queryId": "ba52882a-f5de-46ec-9cd7-3dcb253e895e",
+      "queryName": "Silver_Layer Products",
+      "queryGroupId": "4658f40d-5b07-4875-9895-7283c8e4d6ad",
       "loadEnabled": false
     },
     "Bronze_Layer CustomerSegments": {
       "queryId": "73c37c9f-8724-4d98-bced-532286699e34",
       "queryName": "Bronze_Layer CustomerSegments",
+      "queryGroupId": "88900226-e872-4c16-837d-97054c739a46"
+    },
+    "Silver_Layer CustomerSegments": {
+      "queryId": "be1b2d4d-a6c5-4ad6-b1db-41492140d5dc",
+      "queryName": "Silver_Layer CustomerSegments",
+      "queryGroupId": "88900226-e872-4c16-837d-97054c739a46",
       "loadEnabled": false
+    },
+    "Mapping CustomerSegments": {
+      "queryId": "54c51a1a-0984-41f7-91ac-78a2d0273bd1",
+      "queryName": "Mapping CustomerSegments",
+      "queryGroupId": "88900226-e872-4c16-837d-97054c739a46"
     },
     "Bronze_Layer Customers": {
       "queryId": "32fc12d5-d53b-4ee3-b2f7-f9f45c5d78dc",
       "queryName": "Bronze_Layer Customers",
-      "loadEnabled": false
+      "queryGroupId": "3af74248-662a-4aad-9cdf-e79f225800c5"
     },
     "Bronze_Layer CustomerAddresses": {
       "queryId": "03848253-1bef-4cfd-af1f-25af6f42e31b",
-      "queryName": "Bronze_Layer CustomerAddresses"
+      "queryName": "Bronze_Layer CustomerAddresses",
+      "queryGroupId": "44cf0a9c-6566-49ee-8baa-a343f8e81f41"
     },
-    "Bronze_Layer Employees": {
-      "queryId": "82c9b4f3-0dd0-4af9-bde8-9b0dbd2876e5",
-      "queryName": "Bronze_Layer Employees"
+    "Bronze_Silver CustomerAddresses": {
+      "queryId": "c8f7bd80-2717-4140-a089-8032cc08cb2b",
+      "queryName": "Bronze_Silver CustomerAddresses",
+      "queryGroupId": "44cf0a9c-6566-49ee-8baa-a343f8e81f41",
+      "loadEnabled": false
+    },
+    "Mapping CustomerAddresses": {
+      "queryId": "b9bef5f2-a620-483a-9e74-9e58bada3b47",
+      "queryName": "Mapping CustomerAddresses",
+      "queryGroupId": "44cf0a9c-6566-49ee-8baa-a343f8e81f41"
     },
     "Bronze_Layer Stores": {
       "queryId": "a08098a3-e2b6-423c-8734-db8679c14535",
-      "queryName": "Bronze_Layer Stores"
+      "queryName": "Bronze_Layer Stores",
+      "queryGroupId": "8c7424c5-8d7f-4df7-9bed-705796d472ac"
     },
-    "Bronze_Layer CustomerSegments_DataDestination": {
-      "queryId": "6f3b64d8-a3f5-47d8-aa34-d6550f58bde5",
-      "queryName": "Bronze_Layer CustomerSegments_DataDestination",
-      "isHidden": true,
+    "Silver_Layer Stores": {
+      "queryId": "60a70513-27a8-4f4b-b6d4-ef2c8af4ed35",
+      "queryName": "Silver_Layer Stores",
+      "queryGroupId": "8c7424c5-8d7f-4df7-9bed-705796d472ac",
       "loadEnabled": false
+    },
+    "Mapping Stores": {
+      "queryId": "e9f5b012-867f-4753-8194-1addab93bc72",
+      "queryName": "Mapping Stores",
+      "queryGroupId": "8c7424c5-8d7f-4df7-9bed-705796d472ac",
+      "loadEnabled": false
+    },
+    "Bronze_Layer Employees": {
+      "queryId": "82c9b4f3-0dd0-4af9-bde8-9b0dbd2876e5",
+      "queryName": "Bronze_Layer Employees",
+      "queryGroupId": "e138fef1-e8ce-410e-8c7f-545f48f6a919"
     },
     "Mapping Categories": {
       "queryId": "e0aa7513-7ede-4653-92cf-315c0133e951",
@@ -102,10 +164,100 @@
       "isHidden": true,
       "loadEnabled": false
     },
-    "Mappin Suppliers": {
+    "Mapping Suppliers": {
       "queryId": "b5e60c21-98da-40b2-9939-a35b8ab28e61",
-      "queryName": "Mappin Suppliers",
+      "queryName": "Mapping Suppliers",
       "queryGroupId": "648b3bbe-be87-4a75-a1c6-1d5cf63dd219"
+    },
+    "Silver_Layer Products_DataDestination": {
+      "queryId": "40249c40-bc69-411e-b3ea-8c78b17f2bf1",
+      "queryName": "Silver_Layer Products_DataDestination",
+      "isHidden": true,
+      "loadEnabled": false
+    },
+    "Mapping Products": {
+      "queryId": "c4b695a8-5979-465d-8df7-bd5f2ec0ea97",
+      "queryName": "Mapping Products",
+      "queryGroupId": "4658f40d-5b07-4875-9895-7283c8e4d6ad",
+      "loadEnabled": false
+    },
+    "Mapping Products_DataDestination": {
+      "queryId": "a5f620c9-f456-4f6b-ba9e-4ea24c6b0e8c",
+      "queryName": "Mapping Products_DataDestination",
+      "isHidden": true,
+      "loadEnabled": false
+    },
+    "Silver_Layer CustomerSegments_DataDestination": {
+      "queryId": "7f1f8195-d9eb-4b55-af6a-fec611de47dd",
+      "queryName": "Silver_Layer CustomerSegments_DataDestination",
+      "isHidden": true,
+      "loadEnabled": false
+    },
+    "Silver_Layer Customers": {
+      "queryId": "289ca916-9e70-4dd4-b6d8-9fac06d678c3",
+      "queryName": "Silver_Layer Customers",
+      "queryGroupId": "3af74248-662a-4aad-9cdf-e79f225800c5",
+      "loadEnabled": false
+    },
+    "Silver_Layer Customers_DataDestination": {
+      "queryId": "8c32a82c-b8bd-407c-9cae-b3b0375818e3",
+      "queryName": "Silver_Layer Customers_DataDestination",
+      "isHidden": true,
+      "loadEnabled": false
+    },
+    "Mapping Customers": {
+      "queryId": "c7a7366f-5c74-4be5-8fda-a0d24e98c71a",
+      "queryName": "Mapping Customers",
+      "queryGroupId": "3af74248-662a-4aad-9cdf-e79f225800c5",
+      "loadEnabled": false
+    },
+    "Mapping Customers_DataDestination": {
+      "queryId": "80414cc5-7099-4670-adf2-a1e81f77c951",
+      "queryName": "Mapping Customers_DataDestination",
+      "isHidden": true,
+      "loadEnabled": false
+    },
+    "Bronze_Silver CustomerAddresses_DataDestination": {
+      "queryId": "206fb547-810f-4f6a-9a68-b82648d39bdb",
+      "queryName": "Bronze_Silver CustomerAddresses_DataDestination",
+      "isHidden": true,
+      "loadEnabled": false
+    },
+    "Silver_Layer Stores_DataDestination": {
+      "queryId": "332ad42e-b0ea-414d-875c-4f8c99940f02",
+      "queryName": "Silver_Layer Stores_DataDestination",
+      "isHidden": true,
+      "loadEnabled": false
+    },
+    "Mapping Stores_DataDestination": {
+      "queryId": "9cf3f5ef-2207-47f8-bb5e-93c0d4bd1eac",
+      "queryName": "Mapping Stores_DataDestination",
+      "isHidden": true,
+      "loadEnabled": false
+    },
+    "Silver_Layer Employees": {
+      "queryId": "90cd891d-9825-42e2-909e-4be6d69b0730",
+      "queryName": "Silver_Layer Employees",
+      "queryGroupId": "e138fef1-e8ce-410e-8c7f-545f48f6a919",
+      "loadEnabled": false
+    },
+    "Silver_Layer Employees_DataDestination": {
+      "queryId": "0061094e-e5e5-46ad-afaf-1ae877e53e2c",
+      "queryName": "Silver_Layer Employees_DataDestination",
+      "isHidden": true,
+      "loadEnabled": false
+    },
+    "Mapping Employees": {
+      "queryId": "6c569572-b6a6-4b45-832b-02db6d03ba6c",
+      "queryName": "Mapping Employees",
+      "queryGroupId": "e138fef1-e8ce-410e-8c7f-545f48f6a919",
+      "loadEnabled": false
+    },
+    "Mapping Employees_DataDestination": {
+      "queryId": "0c3759cc-79be-462c-9918-a3cd59166070",
+      "queryName": "Mapping Employees_DataDestination",
+      "isHidden": true,
+      "loadEnabled": false
     }
   },
   "connections": [
