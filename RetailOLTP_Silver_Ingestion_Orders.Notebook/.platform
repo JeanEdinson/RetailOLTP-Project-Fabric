@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "RetailOLTP_Silver_Ingestion_Orders"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "fe3eb9b9-1fca-9edf-4ac7-7ad8335f7be6"
+  }
+}

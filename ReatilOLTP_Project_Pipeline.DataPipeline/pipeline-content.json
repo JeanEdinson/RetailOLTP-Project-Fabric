@@ -4,22 +4,20 @@
       {
         "type": "InvokeCopyJob",
         "typeProperties": {
-          "copyJobId": "1b3f89ff-f588-45db-a036-e334824ef581",
-          "workspaceId": "033013a2-b416-4b09-96e7-2f911dbac52c"
+          "copyJobId": "824ef581-e334-a036-45db-f5881b3f89ff",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
         },
         "externalReferences": {
           "connection": "4488a7b9-17e5-41f8-b05e-eacf7d319d75"
         },
         "policy": {
-          "timeout": "0.1:00:00",
+          "timeout": "0.0:40:00",
           "retry": 2,
           "retryIntervalInSeconds": 30,
           "secureInput": false,
           "secureOutput": false
         },
         "name": "Ingest_Bronze",
-        "state": "Inactive",
-        "onInactiveMarkAs": "Succeeded",
         "dependsOn": []
       },
       {
@@ -32,14 +30,51 @@
           "executeMashupQueriesOnly": true
         },
         "policy": {
-          "timeout": "0.1:00:00",
-          "retry": 0,
+          "timeout": "0.0:40:00",
+          "retry": 2,
           "retryIntervalInSeconds": 30,
           "secureInput": false,
           "secureOutput": false
         },
-        "name": "Dataflow1",
-        "dependsOn": []
+        "name": "Ingest_Silver_Part_1",
+        "dependsOn": [
+          {
+            "activity": "Ingest_Bronze",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "Office365Email",
+        "typeProperties": {
+          "body": "<p>Please check the pipeline @{pipeline().PipelineName}; an error occurred during data ingestion into the bronze layer.</p>",
+          "to": "edinson_gb@outlook.es",
+          "subject": {
+            "value": "<p>Error during the ingestion of the bronze layer - @{pipeline().PipelineName}</p>",
+            "type": "Expression"
+          }
+        },
+        "externalReferences": {
+          "connection": "839c3d43-4799-406a-bec8-a7e4c49621d1"
+        },
+        "policy": {
+          "timeout": "0.0:10:00",
+          "retry": 1,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Alert_Error_Ingest_Bronze",
+        "dependsOn": [
+          {
+            "activity": "Ingest_Bronze",
+            "dependencyConditions": [
+              "Failed"
+            ]
+          }
+        ]
       }
     ]
   }
