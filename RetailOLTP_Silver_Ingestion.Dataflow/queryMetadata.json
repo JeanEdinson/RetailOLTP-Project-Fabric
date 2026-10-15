@@ -58,7 +58,8 @@
     "Bronze_Layer Categories": {
       "queryId": "3a2e6dc3-acf8-44be-a35e-0506d5bb9b1c",
       "queryName": "Bronze_Layer Categories",
-      "queryGroupId": "56ce47ab-aede-41af-a252-974d6d507942"
+      "queryGroupId": "56ce47ab-aede-41af-a252-974d6d507942",
+      "loadEnabled": false
     },
     "Silver_Layer Categories": {
       "queryId": "41f06766-6269-4872-a9fc-2acb75911355",
@@ -69,12 +70,14 @@
     "Bronze_Layer Suppliers": {
       "queryId": "fcc553b0-74bb-40f0-8dbf-63d60a78e8ce",
       "queryName": "Bronze_Layer Suppliers",
-      "queryGroupId": "648b3bbe-be87-4a75-a1c6-1d5cf63dd219"
+      "queryGroupId": "648b3bbe-be87-4a75-a1c6-1d5cf63dd219",
+      "loadEnabled": false
     },
     "Bronze_Layer Products": {
       "queryId": "5688f5cf-0523-4e80-9ae0-55c0139472b4",
       "queryName": "Bronze_Layer Products",
-      "queryGroupId": "4658f40d-5b07-4875-9895-7283c8e4d6ad"
+      "queryGroupId": "4658f40d-5b07-4875-9895-7283c8e4d6ad",
+      "loadEnabled": false
     },
     "Silver_Layer Products": {
       "queryId": "ba52882a-f5de-46ec-9cd7-3dcb253e895e",
@@ -85,7 +88,8 @@
     "Bronze_Layer CustomerSegments": {
       "queryId": "73c37c9f-8724-4d98-bced-532286699e34",
       "queryName": "Bronze_Layer CustomerSegments",
-      "queryGroupId": "88900226-e872-4c16-837d-97054c739a46"
+      "queryGroupId": "88900226-e872-4c16-837d-97054c739a46",
+      "loadEnabled": false
     },
     "Silver_Layer CustomerSegments": {
       "queryId": "be1b2d4d-a6c5-4ad6-b1db-41492140d5dc",
@@ -96,17 +100,20 @@
     "Mapping CustomerSegments": {
       "queryId": "54c51a1a-0984-41f7-91ac-78a2d0273bd1",
       "queryName": "Mapping CustomerSegments",
-      "queryGroupId": "88900226-e872-4c16-837d-97054c739a46"
+      "queryGroupId": "88900226-e872-4c16-837d-97054c739a46",
+      "loadEnabled": false
     },
     "Bronze_Layer Customers": {
       "queryId": "32fc12d5-d53b-4ee3-b2f7-f9f45c5d78dc",
       "queryName": "Bronze_Layer Customers",
-      "queryGroupId": "3af74248-662a-4aad-9cdf-e79f225800c5"
+      "queryGroupId": "3af74248-662a-4aad-9cdf-e79f225800c5",
+      "loadEnabled": false
     },
     "Bronze_Layer CustomerAddresses": {
       "queryId": "03848253-1bef-4cfd-af1f-25af6f42e31b",
       "queryName": "Bronze_Layer CustomerAddresses",
-      "queryGroupId": "44cf0a9c-6566-49ee-8baa-a343f8e81f41"
+      "queryGroupId": "44cf0a9c-6566-49ee-8baa-a343f8e81f41",
+      "loadEnabled": false
     },
     "Bronze_Silver CustomerAddresses": {
       "queryId": "c8f7bd80-2717-4140-a089-8032cc08cb2b",
@@ -117,12 +124,14 @@
     "Mapping CustomerAddresses": {
       "queryId": "b9bef5f2-a620-483a-9e74-9e58bada3b47",
       "queryName": "Mapping CustomerAddresses",
-      "queryGroupId": "44cf0a9c-6566-49ee-8baa-a343f8e81f41"
+      "queryGroupId": "44cf0a9c-6566-49ee-8baa-a343f8e81f41",
+      "loadEnabled": false
     },
     "Bronze_Layer Stores": {
       "queryId": "a08098a3-e2b6-423c-8734-db8679c14535",
       "queryName": "Bronze_Layer Stores",
-      "queryGroupId": "8c7424c5-8d7f-4df7-9bed-705796d472ac"
+      "queryGroupId": "8c7424c5-8d7f-4df7-9bed-705796d472ac",
+      "loadEnabled": false
     },
     "Silver_Layer Stores": {
       "queryId": "60a70513-27a8-4f4b-b6d4-ef2c8af4ed35",
@@ -139,12 +148,14 @@
     "Bronze_Layer Employees": {
       "queryId": "82c9b4f3-0dd0-4af9-bde8-9b0dbd2876e5",
       "queryName": "Bronze_Layer Employees",
-      "queryGroupId": "e138fef1-e8ce-410e-8c7f-545f48f6a919"
+      "queryGroupId": "e138fef1-e8ce-410e-8c7f-545f48f6a919",
+      "loadEnabled": false
     },
     "Mapping Categories": {
       "queryId": "e0aa7513-7ede-4653-92cf-315c0133e951",
       "queryName": "Mapping Categories",
-      "queryGroupId": "56ce47ab-aede-41af-a252-974d6d507942"
+      "queryGroupId": "56ce47ab-aede-41af-a252-974d6d507942",
+      "loadEnabled": false
     },
     "Bronze_Silver Categories_DataDestination": {
       "queryId": "d3be7ce5-5bb1-4ffe-aca4-f49254a37c6c",
@@ -167,7 +178,8 @@
     "Mapping Suppliers": {
       "queryId": "b5e60c21-98da-40b2-9939-a35b8ab28e61",
       "queryName": "Mapping Suppliers",
-      "queryGroupId": "648b3bbe-be87-4a75-a1c6-1d5cf63dd219"
+      "queryGroupId": "648b3bbe-be87-4a75-a1c6-1d5cf63dd219",
+      "loadEnabled": false
     },
     "Silver_Layer Products_DataDestination": {
       "queryId": "40249c40-bc69-411e-b3ea-8c78b17f2bf1",
