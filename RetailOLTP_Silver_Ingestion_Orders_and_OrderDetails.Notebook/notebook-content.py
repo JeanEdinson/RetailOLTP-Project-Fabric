@@ -758,7 +758,6 @@ else:
     )
 
     # UPDATE:
-    # - No modificar OrderID.
     # - Conservar CreatedAt.
     # - Actualizar UpdatedAt, BatchID y demás campos
     #   únicamente cuando cambien datos de negocio.
@@ -840,7 +839,6 @@ else:
     )
 
     # UPDATE:
-    # - No modificar OrderID.
     # - Conservar CreatedAt.
     # - Actualizar UpdatedAt, BatchID y demás campos
     #   únicamente cuando cambien datos de negocio.

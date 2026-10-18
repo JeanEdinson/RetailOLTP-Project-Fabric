@@ -4,8 +4,8 @@
       {
         "type": "InvokeCopyJob",
         "typeProperties": {
-          "copyJobId": "1b3f89ff-f588-45db-a036-e334824ef581",
-          "workspaceId": "033013a2-b416-4b09-96e7-2f911dbac52c"
+          "copyJobId": "824ef581-e334-a036-45db-f5881b3f89ff",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
         },
         "externalReferences": {
           "connection": "4488a7b9-17e5-41f8-b05e-eacf7d319d75"
@@ -18,15 +18,13 @@
           "secureOutput": false
         },
         "name": "Ingest_Bronze",
-        "state": "Inactive",
-        "onInactiveMarkAs": "Succeeded",
         "dependsOn": []
       },
       {
         "type": "RefreshDataflow",
         "typeProperties": {
-          "dataflowId": "4ce705af-a4a9-47ab-a31e-3b5fd4f694ba",
-          "workspaceId": "033013a2-b416-4b09-96e7-2f911dbac52c",
+          "dataflowId": "d4f694ba-3b5f-a31e-47ab-a4a94ce705af",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
           "notifyOption": "NoNotification",
           "dataflowType": "DataflowFabric",
           "executeMashupQueriesOnly": true
@@ -39,8 +37,6 @@
           "secureOutput": false
         },
         "name": "Ingest_Silver_Part_1",
-        "state": "Inactive",
-        "onInactiveMarkAs": "Succeeded",
         "dependsOn": [
           {
             "activity": "Ingest_Bronze",
