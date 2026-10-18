@@ -4,39 +4,43 @@
       {
         "type": "InvokeCopyJob",
         "typeProperties": {
-          "copyJobId": "824ef581-e334-a036-45db-f5881b3f89ff",
-          "workspaceId": "00000000-0000-0000-0000-000000000000"
+          "copyJobId": "1b3f89ff-f588-45db-a036-e334824ef581",
+          "workspaceId": "033013a2-b416-4b09-96e7-2f911dbac52c"
         },
         "externalReferences": {
           "connection": "4488a7b9-17e5-41f8-b05e-eacf7d319d75"
         },
         "policy": {
           "timeout": "0.0:40:00",
-          "retry": 2,
+          "retry": 1,
           "retryIntervalInSeconds": 30,
           "secureInput": false,
           "secureOutput": false
         },
         "name": "Ingest_Bronze",
+        "state": "Inactive",
+        "onInactiveMarkAs": "Succeeded",
         "dependsOn": []
       },
       {
         "type": "RefreshDataflow",
         "typeProperties": {
-          "dataflowId": "d4f694ba-3b5f-a31e-47ab-a4a94ce705af",
-          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "dataflowId": "4ce705af-a4a9-47ab-a31e-3b5fd4f694ba",
+          "workspaceId": "033013a2-b416-4b09-96e7-2f911dbac52c",
           "notifyOption": "NoNotification",
           "dataflowType": "DataflowFabric",
           "executeMashupQueriesOnly": true
         },
         "policy": {
           "timeout": "0.0:40:00",
-          "retry": 2,
+          "retry": 1,
           "retryIntervalInSeconds": 30,
           "secureInput": false,
           "secureOutput": false
         },
         "name": "Ingest_Silver_Part_1",
+        "state": "Inactive",
+        "onInactiveMarkAs": "Succeeded",
         "dependsOn": [
           {
             "activity": "Ingest_Bronze",
@@ -47,31 +51,38 @@
         ]
       },
       {
-        "type": "Office365Email",
+        "type": "TridentNotebook",
         "typeProperties": {
-          "body": "<p>Please check the pipeline @{pipeline().PipelineName}; an error occurred during data ingestion into the bronze layer.</p>",
-          "to": "edinson_gb@outlook.es",
-          "subject": {
-            "value": "<p>Error during the ingestion of the bronze layer - @{pipeline().PipelineName}</p>",
-            "type": "Expression"
+          "notebookId": "fe3eb9b9-1fca-9edf-4ac7-7ad8335f7be6",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "MODO_CARGA": {
+              "value": "RANGO",
+              "type": "string"
+            },
+            "FECHA_INICIO": {
+              "value": "2026-06-01",
+              "type": "string"
+            },
+            "FECHA_FIN": {
+              "value": "2026-06-30",
+              "type": "string"
+            }
           }
         },
-        "externalReferences": {
-          "connection": "839c3d43-4799-406a-bec8-a7e4c49621d1"
-        },
         "policy": {
-          "timeout": "0.0:10:00",
+          "timeout": "0.0:40:00",
           "retry": 1,
           "retryIntervalInSeconds": 30,
           "secureInput": false,
           "secureOutput": false
         },
-        "name": "Alert_Error_Ingest_Bronze",
+        "name": "Ingest_Orders_OrderDetails_Silver",
         "dependsOn": [
           {
             "activity": "Ingest_Bronze",
             "dependencyConditions": [
-              "Failed"
+              "Succeeded"
             ]
           }
         ]

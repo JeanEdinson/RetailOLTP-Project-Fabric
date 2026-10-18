@@ -13,14 +13,18 @@ shared #"Bronze_Layer Categories" = let
   #"Índice agregado" = Table.AddIndexColumn(#"Filas ordenadas", "NewCategoryID", 1, 1, Int64.Type)
 in
   #"Índice agregado";
-[DataDestinations = {[Definition = [Kind = "Reference", QueryName = "Bronze_Silver Categories_DataDestination", IsNewTarget = true], Settings = [Kind = "Automatic", TypeSettings = [Kind = "Table"]]]}]
+[DataDestinations = {[Definition = [Kind = "Reference", QueryName = "Silver_Layer Categories_DataDestination", IsNewTarget = true], Settings = [Kind = "Automatic", TypeSettings = [Kind = "Table"]]]}]
 shared #"Silver_Layer Categories" = let
   Origen = #"Bronze_Layer Categories",
   #"Elegir columnas" = Table.SelectColumns(Origen, {"CategoryName", "NewCategoryID"}),
   #"Columnas con nombre cambiado" = Table.RenameColumns(#"Elegir columnas", {{"NewCategoryID", "CategoryID"}}),
-  #"Columnas reordenadas" = Table.ReorderColumns(#"Columnas con nombre cambiado", {"CategoryID", "CategoryName"})
+  #"Columnas reordenadas" = Table.ReorderColumns(#"Columnas con nombre cambiado", {"CategoryID", "CategoryName"}),
+  #"Personalizado agregado" = Table.TransformColumnTypes(Table.AddColumn(#"Columnas reordenadas", "CreateAt", each DateTimeZone.FixedUtcNow()), {{"CreateAt", type datetime}}),
+  #"Personalizado agregado 1" = Table.TransformColumnTypes(Table.AddColumn(#"Personalizado agregado", "UpdateAt", each DateTimeZone.FixedUtcNow()), {{"UpdateAt", type datetime}}),
+  #"Personalizado agregado 2" = Table.TransformColumnTypes(Table.AddColumn(#"Personalizado agregado 1", "SourceSystem", each "RetailOLTP"), {{"SourceSystem", type text}}),
+  #"Personalizado agregado 3" = Table.TransformColumnTypes(Table.AddColumn(#"Personalizado agregado 2", "BatchID", each Text.NewGuid()), {{"BatchID", type text}})
 in
-  #"Columnas reordenadas";
+  #"Personalizado agregado 3";
 shared #"Bronze_Layer Suppliers" = let
   Origen = Lakehouse.Contents(null),
   Navegación = Origen{[workspaceId = "033013a2-b416-4b09-96e7-2f911dbac52c"]}[Data],
@@ -72,9 +76,13 @@ shared #"Silver_Layer Products" = let
   #"Duplicados quitados" = Table.Distinct(#"todas_las_filas expandido", {"NewProductID"}),
   #"Elegir columnas" = Table.SelectColumns(#"Duplicados quitados", {"SKU", "ProductName", "CategoryID", "SupplierID", "CostPrice", "UnitsPerPackage", "Status", "UnitPrice", "NewProductID"}),
   #"Columnas con nombre cambiado" = Table.RenameColumns(#"Elegir columnas", {{"NewProductID", "ProductID"}}),
-  #"Columnas reordenadas" = Table.ReorderColumns(#"Columnas con nombre cambiado", {"ProductID", "SKU", "ProductName", "CategoryID", "SupplierID", "CostPrice", "UnitsPerPackage", "Status", "UnitPrice"})
+  #"Columnas reordenadas" = Table.ReorderColumns(#"Columnas con nombre cambiado", {"ProductID", "SKU", "ProductName", "CategoryID", "SupplierID", "CostPrice", "UnitsPerPackage", "Status", "UnitPrice"}),
+  #"Personalizado agregado" = Table.TransformColumnTypes(Table.AddColumn(#"Columnas reordenadas", "CreateAt", each DateTimeZone.FixedUtcNow()), {{"CreateAt", type datetime}}),
+  #"Personalizado agregado 1" = Table.TransformColumnTypes(Table.AddColumn(#"Personalizado agregado", "UpdateAt", each DateTimeZone.FixedUtcNow()), {{"UpdateAt", type datetime}}),
+  #"Personalizado agregado 2" = Table.TransformColumnTypes(Table.AddColumn(#"Personalizado agregado 1", "SourceSystem", each "RetailOLTP"), {{"SourceSystem", type text}}),
+  #"Personalizado agregado 3" = Table.TransformColumnTypes(Table.AddColumn(#"Personalizado agregado 2", "BatchID", each Text.NewGuid()), {{"BatchID", type text}})
 in
-  #"Columnas reordenadas";
+  #"Personalizado agregado 3";
 shared #"Bronze_Layer CustomerSegments" = let
   Origen = Lakehouse.Contents(null),
   Navegación = Origen{[workspaceId = "033013a2-b416-4b09-96e7-2f911dbac52c"]}[Data],
@@ -92,9 +100,13 @@ shared #"Silver_Layer CustomerSegments" = let
   Origen = #"Bronze_Layer CustomerSegments",
   #"Elegir columnas" = Table.SelectColumns(Origen, {"SegmentName", "NewCustomerSegmentID"}),
   #"Columnas con nombre cambiado" = Table.RenameColumns(#"Elegir columnas", {{"NewCustomerSegmentID", "CustomerSegmentID"}}),
-  #"Columnas reordenadas" = Table.ReorderColumns(#"Columnas con nombre cambiado", {"CustomerSegmentID", "SegmentName"})
+  #"Columnas reordenadas" = Table.ReorderColumns(#"Columnas con nombre cambiado", {"CustomerSegmentID", "SegmentName"}),
+  #"Personalizado agregado" = Table.TransformColumnTypes(Table.AddColumn(#"Columnas reordenadas", "CreateAt", each DateTimeZone.FixedUtcNow()), {{"CreateAt", type datetime}}),
+  #"Personalizado agregado 1" = Table.TransformColumnTypes(Table.AddColumn(#"Personalizado agregado", "UpdateAt", each DateTimeZone.FixedUtcNow()), {{"UpdateAt", type datetime}}),
+  #"Personalizado agregado 2" = Table.TransformColumnTypes(Table.AddColumn(#"Personalizado agregado 1", "SourceSystem", each "RetailOLTP"), {{"SourceSystem", type text}}),
+  #"Personalizado agregado 3" = Table.TransformColumnTypes(Table.AddColumn(#"Personalizado agregado 2", "BatchID", each Text.NewGuid()), {{"BatchID", type text}})
 in
-  #"Columnas reordenadas";
+  #"Personalizado agregado 3";
 shared #"Mapping CustomerSegments" = let
   Origen = #"Bronze_Layer CustomerSegments",
   #"todas_las_filas expandido" = Table.ExpandTableColumn(Origen, "todas_las_filas", {"CustomerSegmentID"}, {"OriginalCustomerSegmentID"}),
@@ -187,16 +199,20 @@ shared #"Bronze_Layer CustomerAddresses" = let
   #"Índice agregado" = Table.AddIndexColumn(#"Filas ordenadas", "NewCustomerAddressesID", 1, 1, Int64.Type)
 in
   #"Índice agregado";
-[DataDestinations = {[Definition = [Kind = "Reference", QueryName = "Bronze_Silver CustomerAddresses_DataDestination", IsNewTarget = true], Settings = [Kind = "Automatic", TypeSettings = [Kind = "Table"]]]}]
-shared #"Bronze_Silver CustomerAddresses" = let
+[DataDestinations = {[Definition = [Kind = "Reference", QueryName = "Silver_Layer CustomerAddresses_DataDestination", IsNewTarget = true], Settings = [Kind = "Automatic", TypeSettings = [Kind = "Table"]]]}]
+shared #"Silver_Layer CustomerAddresses" = let
   Origen = #"Bronze_Layer CustomerAddresses",
   #"todas_las_filas expandido" = Table.ExpandTableColumn(Origen, "todas_las_filas", {"AddressLine2", "Country", "IsPrimary"}, {"AddressLine2", "Country", "IsPrimary"}),
   #"Elegir columnas" = Table.SelectColumns(#"todas_las_filas expandido", {"AddressType", "AddressLine1", "City", "State", "PostalCode", "NewCustomerID", "AddressLine2", "Country", "IsPrimary", "NewCustomerAddressesID"}),
   #"Duplicados quitados" = Table.Distinct(#"Elegir columnas", {"NewCustomerAddressesID"}),
   #"Columnas con nombre cambiado" = Table.RenameColumns(#"Duplicados quitados", {{"NewCustomerAddressesID", "CustomerAddressesID"}, {"NewCustomerID", "CustomerID"}}),
-  #"Columnas reordenadas" = Table.ReorderColumns(#"Columnas con nombre cambiado", {"CustomerAddressesID", "CustomerID", "AddressType", "AddressLine1", "AddressLine2", "City", "State", "PostalCode", "Country", "IsPrimary"})
+  #"Columnas reordenadas" = Table.ReorderColumns(#"Columnas con nombre cambiado", {"CustomerAddressesID", "CustomerID", "AddressType", "AddressLine1", "AddressLine2", "City", "State", "PostalCode", "Country", "IsPrimary"}),
+  #"Personalizado agregado" = Table.TransformColumnTypes(Table.AddColumn(#"Columnas reordenadas", "CreateAt", each DateTimeZone.FixedUtcNow()), {{"CreateAt", type datetime}}),
+  #"Personalizado agregado 1" = Table.TransformColumnTypes(Table.AddColumn(#"Personalizado agregado", "UpdateAt", each DateTimeZone.FixedUtcNow()), {{"UpdateAt", type datetime}}),
+  #"Personalizado agregado 2" = Table.TransformColumnTypes(Table.AddColumn(#"Personalizado agregado 1", "SourceSystem", each "RetailOLTP"), {{"SourceSystem", type text}}),
+  #"Personalizado agregado 3" = Table.TransformColumnTypes(Table.AddColumn(#"Personalizado agregado 2", "BatchID", each Text.NewGuid()), {{"BatchID", type text}})
 in
-  #"Columnas reordenadas";
+  #"Personalizado agregado 3";
 shared #"Mapping CustomerAddresses" = let
   Origen = #"Bronze_Layer CustomerAddresses",
   #"todas_las_filas expandido" = Table.ExpandTableColumn(Origen, "todas_las_filas", {"CustomerAddressID"}, {"OriginalCustomerAddressID"}),
@@ -232,16 +248,24 @@ shared #"Silver_Layer Stores" = let
   #"Duplicados quitados" = Table.Distinct(#"toddas_las_filas expandido", {"NewStoreID"}),
   #"Elegir columnas" = Table.SelectColumns(#"Duplicados quitados", {"StoreCode", "StoreName", "Address", "City", "State", "StoreType", "Status", "Country", "OpeningDate", "NewStoreID"}),
   #"Columnas con nombre cambiado" = Table.RenameColumns(#"Elegir columnas", {{"NewStoreID", "StoreID"}}),
-  #"Columnas reordenadas" = Table.ReorderColumns(#"Columnas con nombre cambiado", {"StoreID", "StoreCode", "StoreName", "Address", "City", "State", "Country", "StoreType", "OpeningDate", "Status"})
+  #"Columnas reordenadas" = Table.ReorderColumns(#"Columnas con nombre cambiado", {"StoreID", "StoreCode", "StoreName", "Address", "City", "State", "Country", "StoreType", "OpeningDate", "Status"}),
+  #"Personalizado agregado" = Table.TransformColumnTypes(Table.AddColumn(#"Columnas reordenadas", "CreateAt", each DateTimeZone.FixedUtcNow()), {{"CreateAt", type datetime}}),
+  #"Personalizado agregado 1" = Table.TransformColumnTypes(Table.AddColumn(#"Personalizado agregado", "UpdateAt", each DateTimeZone.FixedUtcNow()), {{"UpdateAt", type datetime}}),
+  #"Personalizado agregado 2" = Table.TransformColumnTypes(Table.AddColumn(#"Personalizado agregado 1", "SourceSystem", each "RetailOLTP"), {{"SourceSystem", type text}}),
+  #"Personalizado agregado 3" = Table.TransformColumnTypes(Table.AddColumn(#"Personalizado agregado 2", "BatchID", each Text.NewGuid()), {{"BatchID", type text}})
 in
-  #"Columnas reordenadas";
+  #"Personalizado agregado 3";
 [DataDestinations = {[Definition = [Kind = "Reference", QueryName = "Mapping Stores_DataDestination", IsNewTarget = true], Settings = [Kind = "Automatic", TypeSettings = [Kind = "Table"]]]}]
 shared #"Mapping Stores" = let
   Origen = #"Bronze_Layer Stores",
   #"toddas_las_filas expandido" = Table.ExpandTableColumn(Origen, "toddas_las_filas", {"StoreID"}, {"OriginalStoreID"}),
-  #"Elegir columnas" = Table.SelectColumns(#"toddas_las_filas expandido", {"OriginalStoreID", "NewStoreID"})
+  #"Elegir columnas" = Table.SelectColumns(#"toddas_las_filas expandido", {"OriginalStoreID", "NewStoreID"}),
+  #"Personalizado agregado" = Table.TransformColumnTypes(Table.AddColumn(#"Elegir columnas", "CreateAt", each DateTimeZone.FixedUtcNow()), {{"CreateAt", type datetime}}),
+  #"Personalizado agregado 1" = Table.TransformColumnTypes(Table.AddColumn(#"Personalizado agregado", "UpdateAt", each DateTimeZone.FixedUtcNow()), {{"UpdateAt", type datetime}}),
+  #"Personalizado agregado 2" = Table.TransformColumnTypes(Table.AddColumn(#"Personalizado agregado 1", "SourceSystem", each "RetailOLTP"), {{"SourceSystem", type text}}),
+  #"Personalizado agregado 3" = Table.TransformColumnTypes(Table.AddColumn(#"Personalizado agregado 2", "BatchID", each Text.NewGuid()), {{"BatchID", type text}})
 in
-  #"Elegir columnas";
+  #"Personalizado agregado 3";
 shared #"Bronze_Layer Employees" = let
   Origen = Lakehouse.Contents(null),
   Navegación = Origen{[workspaceId = "033013a2-b416-4b09-96e7-2f911dbac52c"]}[Data],
@@ -272,14 +296,6 @@ shared #"Mapping Categories" = let
   #"Elegir columnas" = Table.SelectColumns(#"todas:_las_filas expandido", {"OriginalCategoryID", "NewCategoryID"})
 in
   #"Elegir columnas";
-shared #"Bronze_Silver Categories_DataDestination" = let
-  Pattern = Lakehouse.Contents([CreateNavigationProperties = false, EnableFolding = false, HierarchicalNavigation = true, EnableVorder = true, OutputMetadataRefresh = true]),
-  Navigation_1 = Pattern{[workspaceId = "033013a2-b416-4b09-96e7-2f911dbac52c"]}[Data],
-  Navigation_2 = Navigation_1{[lakehouseId = "15094689-301b-4cc4-b32a-9fe54b60893a"]}[Data],
-  Navigation_3 = Navigation_2{[Id = "Silver_Layer", ItemKind = "Schema"]}[Data],
-  TableNavigation = Navigation_3{[Id = "Categories_Silver", ItemKind = "Table"]}?[Data]?
-in
-  TableNavigation;
 [DataDestinations = {[Definition = [Kind = "Reference", QueryName = "Silver_Layer Suppliers_DataDestination", IsNewTarget = true], Settings = [Kind = "Automatic", TypeSettings = [Kind = "Table"]]]}]
 shared #"Silver_Layer Suppliers" = let
   Origen = #"Bronze_Layer Suppliers",
@@ -287,9 +303,86 @@ shared #"Silver_Layer Suppliers" = let
   #"Columnas con nombre cambiado" = Table.RenameColumns(#"Elegir columnas 1", {{"NewSupplierID", "SupplierID"}}),
   #"Texto en mayúsculas" = Table.TransformColumns(#"Columnas con nombre cambiado", {{"SupplierName", each Text.Upper(_), type nullable text}}),
   #"Mayúsculas aplicadas en cada palabra" = Table.TransformColumns(#"Texto en mayúsculas", {{"ContactName", each Text.Proper(_), type nullable text}, {"City", each Text.Proper(_), type nullable text}, {"Country", each Text.Proper(_), type nullable text}}),
-  #"Columnas reordenadas" = Table.ReorderColumns(#"Mayúsculas aplicadas en cada palabra", {"SupplierID", "SupplierName", "ContactName", "Email", "Phone", "City", "Country"})
+  #"Columnas reordenadas" = Table.ReorderColumns(#"Mayúsculas aplicadas en cada palabra", {"SupplierID", "SupplierName", "ContactName", "Email", "Phone", "City", "Country"}),
+  #"Personalizado agregado" = Table.TransformColumnTypes(Table.AddColumn(#"Columnas reordenadas", "CreateAt", each DateTimeZone.FixedUtcNow()), {{"CreateAt", type datetime}}),
+  #"Personalizado agregado 1" = Table.TransformColumnTypes(Table.AddColumn(#"Personalizado agregado", "UpdateAt", each DateTimeZone.FixedUtcNow()), {{"UpdateAt", type datetime}}),
+  #"Personalizado agregado 2" = Table.TransformColumnTypes(Table.AddColumn(#"Personalizado agregado 1", "SourceSystem", each "RetailOLTP"), {{"SourceSystem", type text}}),
+  #"Personalizado agregado 3" = Table.TransformColumnTypes(Table.AddColumn(#"Personalizado agregado 2", "BatchID", each Text.NewGuid()), {{"BatchID", type text}})
 in
-  #"Columnas reordenadas";
+  #"Personalizado agregado 3";
+shared #"Mapping Suppliers" = let
+  Origen = #"Bronze_Layer Suppliers",
+  #"todas_las_filas expandido" = Table.ExpandTableColumn(Origen, "todas_las_filas", {"SupplierID"}, {"OriginalSupplierID"}),
+  #"Elegir columnas" = Table.SelectColumns(#"todas_las_filas expandido", {"OriginalSupplierID", "NewSupplierID"})
+in
+  #"Elegir columnas";
+[DataDestinations = {[Definition = [Kind = "Reference", QueryName = "Mapping Products_DataDestination", IsNewTarget = true], Settings = [Kind = "Automatic", TypeSettings = [Kind = "Table"]]]}]
+shared #"Mapping Products" = let
+  Origen = #"Bronze_Layer Products",
+  #"Elegir columnas" = Table.SelectColumns(Origen, {"todas_las_filas", "NewProductID"}),
+  #"todas_las_filas expandido" = Table.ExpandTableColumn(#"Elegir columnas", "todas_las_filas", {"ProductID"}, {"OriginalProductID"}),
+  #"Personalizado agregado" = Table.TransformColumnTypes(Table.AddColumn(#"todas_las_filas expandido", "CreateAt", each DateTimeZone.FixedUtcNow()), {{"CreateAt", type datetime}}),
+  #"Personalizado agregado 1" = Table.TransformColumnTypes(Table.AddColumn(#"Personalizado agregado", "UpdateAt", each DateTimeZone.FixedUtcNow()), {{"UpdateAt", type datetime}}),
+  #"Personalizado agregado 2" = Table.TransformColumnTypes(Table.AddColumn(#"Personalizado agregado 1", "SourceSystem", each "RetailOLTP"), {{"SourceSystem", type text}}),
+  #"Personalizado agregado 3" = Table.TransformColumnTypes(Table.AddColumn(#"Personalizado agregado 2", "BatchID", each Text.NewGuid()), {{"BatchID", type text}})
+in
+  #"Personalizado agregado 3";
+[DataDestinations = {[Definition = [Kind = "Reference", QueryName = "Silver_Layer Customers_DataDestination", IsNewTarget = true], Settings = [Kind = "Automatic", TypeSettings = [Kind = "Table"]]]}]
+shared #"Silver_Layer Customers" = let
+  Origen = #"Bronze_Layer Customers",
+  #"todas_las_filas expandido" = Table.ExpandTableColumn(Origen, "todas_las_filas", {"BirthDate", "Gender", "RegistrationDate", "Status", "Phone"}, {"BirthDate", "Gender", "RegistrationDate", "Status", "Phone"}),
+  #"Elegir columnas" = Table.SelectColumns(#"todas_las_filas expandido", {"FirstName", "LastName", "Email", "CustomerSegmentID", "BirthDate", "Gender", "RegistrationDate", "Status", "Phone", "NewCustomerID"}),
+  #"Columnas con nombre cambiado" = Table.RenameColumns(#"Elegir columnas", {{"NewCustomerID", "CustomerID"}}),
+  #"Personalizado agregado" = Table.TransformColumnTypes(Table.AddColumn(#"Columnas con nombre cambiado", "CreateAt", each DateTimeZone.FixedUtcNow()), {{"CreateAt", type datetime}}),
+  #"Personalizado agregado 1" = Table.TransformColumnTypes(Table.AddColumn(#"Personalizado agregado", "UpdateAt", each DateTimeZone.FixedUtcNow()), {{"UpdateAt", type datetime}}),
+  #"Personalizado agregado 2" = Table.TransformColumnTypes(Table.AddColumn(#"Personalizado agregado 1", "SourceSystem", each "RetailOLTP"), {{"SourceSystem", type text}}),
+  #"Personalizado agregado 3" = Table.TransformColumnTypes(Table.AddColumn(#"Personalizado agregado 2", "BatchID", each Text.NewGuid()), {{"BatchID", type text}})
+in
+  #"Personalizado agregado 3";
+[DataDestinations = {[Definition = [Kind = "Reference", QueryName = "Mapping Customers_DataDestination", IsNewTarget = true], Settings = [Kind = "Automatic", TypeSettings = [Kind = "Table"]]]}]
+shared #"Mapping Customers" = let
+  Origen = #"Bronze_Layer Customers",
+  #"todas_las_filas expandido" = Table.ExpandTableColumn(Origen, "todas_las_filas", {"CustomerID"}, {"OriginalCustomerID"}),
+  #"Elegir columnas" = Table.SelectColumns(#"todas_las_filas expandido", {"OriginalCustomerID", "NewCustomerID"}),
+  #"Personalizado agregado" = Table.TransformColumnTypes(Table.AddColumn(#"Elegir columnas", "CreateAt", each DateTimeZone.FixedUtcNow()), {{"CreateAt", type datetime}}),
+  #"Personalizado agregado 1" = Table.TransformColumnTypes(Table.AddColumn(#"Personalizado agregado", "UpdateAt", each DateTimeZone.FixedUtcNow()), {{"UpdateAt", type datetime}}),
+  #"Personalizado agregado 2" = Table.TransformColumnTypes(Table.AddColumn(#"Personalizado agregado 1", "SourceSystem", each "RetailOLTP"), {{"SourceSystem", type text}}),
+  #"Personalizado agregado 3" = Table.TransformColumnTypes(Table.AddColumn(#"Personalizado agregado 2", "BatchID", each Text.NewGuid()), {{"BatchID", type text}})
+in
+  #"Personalizado agregado 3";
+[DataDestinations = {[Definition = [Kind = "Reference", QueryName = "Silver_Layer Employees_DataDestination", IsNewTarget = true], Settings = [Kind = "Automatic", TypeSettings = [Kind = "Table"]]]}]
+shared #"Silver_Layer Employees" = let
+  Origen = #"Bronze_Layer Employees",
+  #"todas_las_filas expandido" = Table.ExpandTableColumn(Origen, "todas_las_filas", {"JobTitle", "HireDate"}, {"JobTitle", "HireDate"}),
+  #"Duplicados quitados" = Table.Distinct(#"todas_las_filas expandido", {"NewEmployeeID"}),
+  #"Elegir columnas" = Table.SelectColumns(#"Duplicados quitados", {"FirstName", "LastName", "Email", "Status", "NewStoreID", "JobTitle", "HireDate", "NewEmployeeID"}),
+  #"Columnas reordenadas" = Table.ReorderColumns(#"Elegir columnas", {"NewEmployeeID", "FirstName", "LastName", "Email", "Status", "NewStoreID", "JobTitle", "HireDate"}),
+  #"Columnas con nombre cambiado" = Table.RenameColumns(#"Columnas reordenadas", {{"NewEmployeeID", "EmployeeID"}}),
+  #"Personalizado agregado" = Table.TransformColumnTypes(Table.AddColumn(#"Columnas con nombre cambiado" , "CreateAt", each DateTimeZone.FixedUtcNow()), {{"CreateAt", type datetime}}),
+  #"Personalizado agregado 1" = Table.TransformColumnTypes(Table.AddColumn(#"Personalizado agregado", "UpdateAt", each DateTimeZone.FixedUtcNow()), {{"UpdateAt", type datetime}}),
+  #"Personalizado agregado 2" = Table.TransformColumnTypes(Table.AddColumn(#"Personalizado agregado 1", "SourceSystem", each "RetailOLTP"), {{"SourceSystem", type text}}),
+  #"Personalizado agregado 3" = Table.TransformColumnTypes(Table.AddColumn(#"Personalizado agregado 2", "BatchID", each Text.NewGuid()), {{"BatchID", type text}})
+in
+  #"Personalizado agregado 3";
+[DataDestinations = {[Definition = [Kind = "Reference", QueryName = "Mapping Employees_DataDestination", IsNewTarget = true], Settings = [Kind = "Automatic", TypeSettings = [Kind = "Table"]]]}]
+shared #"Mapping Employees" = let
+  Origen = #"Bronze_Layer Employees",
+  #"todas_las_filas expandido" = Table.ExpandTableColumn(Origen, "todas_las_filas", {"EmployeeID"}, {"OriginalEmployeeID"}),
+  #"Elegir columnas" = Table.SelectColumns(#"todas_las_filas expandido", {"OriginalEmployeeID", "NewEmployeeID"}),
+  #"Personalizado agregado" = Table.TransformColumnTypes(Table.AddColumn(#"Elegir columnas", "CreateAt", each DateTimeZone.FixedUtcNow()), {{"CreateAt", type datetime}}),
+  #"Personalizado agregado 1" = Table.TransformColumnTypes(Table.AddColumn(#"Personalizado agregado", "UpdateAt", each DateTimeZone.FixedUtcNow()), {{"UpdateAt", type datetime}}),
+  #"Personalizado agregado 2" = Table.TransformColumnTypes(Table.AddColumn(#"Personalizado agregado 1", "SourceSystem", each "RetailOLTP"), {{"SourceSystem", type text}}),
+  #"Personalizado agregado 3" = Table.TransformColumnTypes(Table.AddColumn(#"Personalizado agregado 2", "BatchID", each Text.NewGuid()), {{"BatchID", type text}})
+in
+  #"Personalizado agregado 3";
+shared #"Silver_Layer Categories_DataDestination" = let
+  Pattern = Lakehouse.Contents([CreateNavigationProperties = false, EnableFolding = false, HierarchicalNavigation = true, EnableVorder = true, OutputMetadataRefresh = true]),
+  Navigation_1 = Pattern{[workspaceId = "033013a2-b416-4b09-96e7-2f911dbac52c"]}[Data],
+  Navigation_2 = Navigation_1{[lakehouseId = "15094689-301b-4cc4-b32a-9fe54b60893a"]}[Data],
+  Navigation_3 = Navigation_2{[Id = "Silver_Layer", ItemKind = "Schema"]}[Data],
+  TableNavigation = Navigation_3{[Id = "Categories_Silver", ItemKind = "Table"]}?[Data]?
+in
+  TableNavigation;
 shared #"Silver_Layer Suppliers_DataDestination" = let
   Pattern = Lakehouse.Contents([CreateNavigationProperties = false, EnableFolding = false, HierarchicalNavigation = true, EnableVorder = true, OutputMetadataRefresh = true]),
   Navigation_1 = Pattern{[workspaceId = "033013a2-b416-4b09-96e7-2f911dbac52c"]}[Data],
@@ -298,12 +391,6 @@ shared #"Silver_Layer Suppliers_DataDestination" = let
   TableNavigation = Navigation_3{[Id = "Suppliers_Silver", ItemKind = "Table"]}?[Data]?
 in
   TableNavigation;
-shared #"Mapping Suppliers" = let
-  Origen = #"Bronze_Layer Suppliers",
-  #"todas_las_filas expandido" = Table.ExpandTableColumn(Origen, "todas_las_filas", {"SupplierID"}, {"OriginalSupplierID"}),
-  #"Elegir columnas" = Table.SelectColumns(#"todas_las_filas expandido", {"OriginalSupplierID", "NewSupplierID"})
-in
-  #"Elegir columnas";
 shared #"Silver_Layer Products_DataDestination" = let
   Pattern = Lakehouse.Contents([CreateNavigationProperties = false, EnableFolding = false, HierarchicalNavigation = true, EnableVorder = true, OutputMetadataRefresh = true]),
   Navigation_1 = Pattern{[workspaceId = "033013a2-b416-4b09-96e7-2f911dbac52c"]}[Data],
@@ -312,13 +399,6 @@ shared #"Silver_Layer Products_DataDestination" = let
   TableNavigation = Navigation_3{[Id = "Products_Silver", ItemKind = "Table"]}?[Data]?
 in
   TableNavigation;
-[DataDestinations = {[Definition = [Kind = "Reference", QueryName = "Mapping Products_DataDestination", IsNewTarget = true], Settings = [Kind = "Automatic", TypeSettings = [Kind = "Table"]]]}]
-shared #"Mapping Products" = let
-  Origen = #"Bronze_Layer Products",
-  #"Elegir columnas" = Table.SelectColumns(Origen, {"todas_las_filas", "NewProductID"}),
-  #"todas_las_filas expandido" = Table.ExpandTableColumn(#"Elegir columnas", "todas_las_filas", {"ProductID"}, {"OriginalProductID"})
-in
-  #"todas_las_filas expandido";
 shared #"Mapping Products_DataDestination" = let
   Pattern = Lakehouse.Contents([CreateNavigationProperties = false, EnableFolding = false, HierarchicalNavigation = true, EnableVorder = true, OutputMetadataRefresh = true]),
   Navigation_1 = Pattern{[workspaceId = "033013a2-b416-4b09-96e7-2f911dbac52c"]}[Data],
@@ -335,14 +415,6 @@ shared #"Silver_Layer CustomerSegments_DataDestination" = let
   TableNavigation = Navigation_3{[Id = "CustomerSegments_Silver", ItemKind = "Table"]}?[Data]?
 in
   TableNavigation;
-[DataDestinations = {[Definition = [Kind = "Reference", QueryName = "Silver_Layer Customers_DataDestination", IsNewTarget = true], Settings = [Kind = "Automatic", TypeSettings = [Kind = "Table"]]]}]
-shared #"Silver_Layer Customers" = let
-  Origen = #"Bronze_Layer Customers",
-  #"todas_las_filas expandido" = Table.ExpandTableColumn(Origen, "todas_las_filas", {"BirthDate", "Gender", "RegistrationDate", "Status", "Phone"}, {"BirthDate", "Gender", "RegistrationDate", "Status", "Phone"}),
-  #"Elegir columnas" = Table.SelectColumns(#"todas_las_filas expandido", {"FirstName", "LastName", "Email", "CustomerSegmentID", "BirthDate", "Gender", "RegistrationDate", "Status", "Phone", "NewCustomerID"}),
-  #"Columnas con nombre cambiado" = Table.RenameColumns(#"Elegir columnas", {{"NewCustomerID", "CustomerID"}})
-in
-  #"Columnas con nombre cambiado";
 shared #"Silver_Layer Customers_DataDestination" = let
   Pattern = Lakehouse.Contents([CreateNavigationProperties = false, EnableFolding = false, HierarchicalNavigation = true, EnableVorder = true, OutputMetadataRefresh = true]),
   Navigation_1 = Pattern{[workspaceId = "033013a2-b416-4b09-96e7-2f911dbac52c"]}[Data],
@@ -351,13 +423,6 @@ shared #"Silver_Layer Customers_DataDestination" = let
   TableNavigation = Navigation_3{[Id = "Customers_Silver", ItemKind = "Table"]}?[Data]?
 in
   TableNavigation;
-[DataDestinations = {[Definition = [Kind = "Reference", QueryName = "Mapping Customers_DataDestination", IsNewTarget = true], Settings = [Kind = "Automatic", TypeSettings = [Kind = "Table"]]]}]
-shared #"Mapping Customers" = let
-  Origen = #"Bronze_Layer Customers",
-  #"todas_las_filas expandido" = Table.ExpandTableColumn(Origen, "todas_las_filas", {"CustomerID"}, {"OriginalCustomerID"}),
-  #"Elegir columnas" = Table.SelectColumns(#"todas_las_filas expandido", {"OriginalCustomerID", "NewCustomerID"})
-in
-  #"Elegir columnas";
 shared #"Mapping Customers_DataDestination" = let
   Pattern = Lakehouse.Contents([CreateNavigationProperties = false, EnableFolding = false, HierarchicalNavigation = true, EnableVorder = true, OutputMetadataRefresh = true]),
   Navigation_1 = Pattern{[workspaceId = "033013a2-b416-4b09-96e7-2f911dbac52c"]}[Data],
@@ -366,7 +431,7 @@ shared #"Mapping Customers_DataDestination" = let
   TableNavigation = Navigation_3{[Id = "Customers_Mapping", ItemKind = "Table"]}?[Data]?
 in
   TableNavigation;
-shared #"Bronze_Silver CustomerAddresses_DataDestination" = let
+shared #"Silver_Layer CustomerAddresses_DataDestination" = let
   Pattern = Lakehouse.Contents([CreateNavigationProperties = false, EnableFolding = false, HierarchicalNavigation = true, EnableVorder = true, OutputMetadataRefresh = true]),
   Navigation_1 = Pattern{[workspaceId = "033013a2-b416-4b09-96e7-2f911dbac52c"]}[Data],
   Navigation_2 = Navigation_1{[lakehouseId = "15094689-301b-4cc4-b32a-9fe54b60893a"]}[Data],
@@ -390,16 +455,6 @@ shared #"Mapping Stores_DataDestination" = let
   TableNavigation = Navigation_3{[Id = "Stores_Mapping", ItemKind = "Table"]}?[Data]?
 in
   TableNavigation;
-[DataDestinations = {[Definition = [Kind = "Reference", QueryName = "Silver_Layer Employees_DataDestination", IsNewTarget = true], Settings = [Kind = "Automatic", TypeSettings = [Kind = "Table"]]]}]
-shared #"Silver_Layer Employees" = let
-  Origen = #"Bronze_Layer Employees",
-  #"todas_las_filas expandido" = Table.ExpandTableColumn(Origen, "todas_las_filas", {"JobTitle", "HireDate"}, {"JobTitle", "HireDate"}),
-  #"Duplicados quitados" = Table.Distinct(#"todas_las_filas expandido", {"NewEmployeeID"}),
-  #"Elegir columnas" = Table.SelectColumns(#"Duplicados quitados", {"FirstName", "LastName", "Email", "Status", "NewStoreID", "JobTitle", "HireDate", "NewEmployeeID"}),
-  #"Columnas reordenadas" = Table.ReorderColumns(#"Elegir columnas", {"NewEmployeeID", "FirstName", "LastName", "Email", "Status", "NewStoreID", "JobTitle", "HireDate"}),
-  #"Columnas con nombre cambiado" = Table.RenameColumns(#"Columnas reordenadas", {{"NewEmployeeID", "EmployeeID"}})
-in
-  #"Columnas con nombre cambiado";
 shared #"Silver_Layer Employees_DataDestination" = let
   Pattern = Lakehouse.Contents([CreateNavigationProperties = false, EnableFolding = false, HierarchicalNavigation = true, EnableVorder = true, OutputMetadataRefresh = true]),
   Navigation_1 = Pattern{[workspaceId = "033013a2-b416-4b09-96e7-2f911dbac52c"]}[Data],
@@ -408,13 +463,6 @@ shared #"Silver_Layer Employees_DataDestination" = let
   TableNavigation = Navigation_3{[Id = "Employees_Silver", ItemKind = "Table"]}?[Data]?
 in
   TableNavigation;
-[DataDestinations = {[Definition = [Kind = "Reference", QueryName = "Mapping Employees_DataDestination", IsNewTarget = true], Settings = [Kind = "Automatic", TypeSettings = [Kind = "Table"]]]}]
-shared #"Mapping Employees" = let
-  Origen = #"Bronze_Layer Employees",
-  #"todas_las_filas expandido" = Table.ExpandTableColumn(Origen, "todas_las_filas", {"EmployeeID"}, {"EmployeeID"}),
-  #"Elegir columnas" = Table.SelectColumns(#"todas_las_filas expandido", {"EmployeeID", "NewEmployeeID"})
-in
-  #"Elegir columnas";
 shared #"Mapping Employees_DataDestination" = let
   Pattern = Lakehouse.Contents([CreateNavigationProperties = false, EnableFolding = false, HierarchicalNavigation = true, EnableVorder = true, OutputMetadataRefresh = true]),
   Navigation_1 = Pattern{[workspaceId = "033013a2-b416-4b09-96e7-2f911dbac52c"]}[Data],

@@ -55,7 +55,7 @@
             "schema": "Bronze_Layer",
             "table": "Categories"
           },
-          "applyVOrder": true,
+          "applyVOrder": false,
           "enableTimestampNtz": false,
           "enableChangeDataFeed": false
         },
@@ -120,7 +120,7 @@
             "schema": "Bronze_Layer",
             "table": "CustomerAddresses"
           },
-          "applyVOrder": true,
+          "applyVOrder": false,
           "enableTimestampNtz": false,
           "enableChangeDataFeed": false
         },
@@ -279,7 +279,7 @@
             "schema": "Bronze_Layer",
             "table": "Customers"
           },
-          "applyVOrder": true,
+          "applyVOrder": false,
           "enableTimestampNtz": false,
           "enableChangeDataFeed": false
         },
@@ -437,7 +437,7 @@
             "schema": "Bronze_Layer",
             "table": "CustomerSegments"
           },
-          "applyVOrder": true,
+          "applyVOrder": false,
           "enableTimestampNtz": false,
           "enableChangeDataFeed": false
         },
@@ -502,7 +502,7 @@
             "schema": "Bronze_Layer",
             "table": "Employees"
           },
-          "applyVOrder": true,
+          "applyVOrder": false,
           "enableTimestampNtz": false,
           "enableChangeDataFeed": false
         },
@@ -637,7 +637,7 @@
             "schema": "Bronze_Layer",
             "table": "Products"
           },
-          "applyVOrder": true,
+          "applyVOrder": false,
           "enableTimestampNtz": false,
           "enableChangeDataFeed": false
         },
@@ -789,7 +789,7 @@
             "schema": "Bronze_Layer",
             "table": "Stores"
           },
-          "applyVOrder": true,
+          "applyVOrder": false,
           "enableTimestampNtz": false,
           "enableChangeDataFeed": false
         },
@@ -949,7 +949,7 @@
             "schema": "Bronze_Layer",
             "table": "Suppliers"
           },
-          "applyVOrder": true,
+          "applyVOrder": false,
           "enableTimestampNtz": false,
           "enableChangeDataFeed": false
         },
