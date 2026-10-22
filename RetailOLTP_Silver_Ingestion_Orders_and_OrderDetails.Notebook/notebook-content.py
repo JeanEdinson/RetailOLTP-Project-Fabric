@@ -219,7 +219,7 @@ if "OrderStatus" in df.columns:
 
     expresion_estado = F.when(
         estado.isin(estados_invalidos),
-        F.lit("No registered status").cast("string")
+        F.lit("No Registered Status").cast("string")
     )
 
     for valor, canonico in equivalencias_estado.items():
@@ -230,7 +230,7 @@ if "OrderStatus" in df.columns:
 
     df = df.withColumn(
         "OrderStatus",
-        expresion_estado.otherwise(F.col("OrderStatus"))
+        expresion_estado.otherwise(F.initcap(F.trim(F.col("OrderStatus"))))
     )
 
 # Convertir valores de cantidades y porcentajes de descuento en positivos en ORDERDETAILS

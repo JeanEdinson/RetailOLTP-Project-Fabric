@@ -82,6 +82,66 @@
             ]
           }
         ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "efe31f81-19e0-ad21-4b33-deba915a847c",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
+        },
+        "policy": {
+          "timeout": "0.0:40:00",
+          "retry": 1,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Ingest_Payments_Silver",
+        "dependsOn": [
+          {
+            "activity": "Ingest_Bronze",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "8e93a1ea-c58b-a487-4a9b-9f5e5ea65d66",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "MODO_CARGA": {
+              "value": "RANGO",
+              "type": "string"
+            },
+            "FECHA_INICIO": {
+              "value": "",
+              "type": "string"
+            },
+            "FECHA_FIN": {
+              "value": "",
+              "type": "string"
+            }
+          }
+        },
+        "policy": {
+          "timeout": "0.0:40:00",
+          "retry": 1,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Ingest_Returns_Silver",
+        "dependsOn": [
+          {
+            "activity": "Ingest_Bronze",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
       }
     ]
   }
