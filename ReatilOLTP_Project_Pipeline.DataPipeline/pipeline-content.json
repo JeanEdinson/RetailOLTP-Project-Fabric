@@ -53,15 +53,15 @@
           "workspaceId": "00000000-0000-0000-0000-000000000000",
           "parameters": {
             "MODO_CARGA": {
-              "value": "RANGO",
+              "value": "FULL",
               "type": "string"
             },
             "FECHA_INICIO": {
-              "value": "2026-06-01",
+              "value": "",
               "type": "string"
             },
             "FECHA_FIN": {
-              "value": "2026-06-30",
+              "value": "",
               "type": "string"
             }
           }
@@ -87,7 +87,21 @@
         "type": "TridentNotebook",
         "typeProperties": {
           "notebookId": "efe31f81-19e0-ad21-4b33-deba915a847c",
-          "workspaceId": "00000000-0000-0000-0000-000000000000"
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "MODO_CARGA": {
+              "value": "FULL",
+              "type": "string"
+            },
+            "FECHA_INICIO": {
+              "value": "",
+              "type": "string"
+            },
+            "FECHA_FIN": {
+              "value": "",
+              "type": "string"
+            }
+          }
         },
         "policy": {
           "timeout": "0.0:40:00",
@@ -113,7 +127,7 @@
           "workspaceId": "00000000-0000-0000-0000-000000000000",
           "parameters": {
             "MODO_CARGA": {
-              "value": "RANGO",
+              "value": "FULL",
               "type": "string"
             },
             "FECHA_INICIO": {

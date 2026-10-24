@@ -375,84 +375,12 @@ shared #"Mapping Employees" = let
   #"Personalizado agregado 3" = Table.TransformColumnTypes(Table.AddColumn(#"Personalizado agregado 2", "BatchID", each Text.NewGuid()), {{"BatchID", type text}})
 in
   #"Personalizado agregado 3";
-shared #"Silver_Layer Categories_DataDestination" = let
-  Pattern = Lakehouse.Contents([CreateNavigationProperties = false, EnableFolding = false, HierarchicalNavigation = true, EnableVorder = true, OutputMetadataRefresh = true]),
-  Navigation_1 = Pattern{[workspaceId = "033013a2-b416-4b09-96e7-2f911dbac52c"]}[Data],
-  Navigation_2 = Navigation_1{[lakehouseId = "15094689-301b-4cc4-b32a-9fe54b60893a"]}[Data],
-  Navigation_3 = Navigation_2{[Id = "Silver_Layer", ItemKind = "Schema"]}[Data],
-  TableNavigation = Navigation_3{[Id = "Categories_Silver", ItemKind = "Table"]}?[Data]?
-in
-  TableNavigation;
-shared #"Silver_Layer Suppliers_DataDestination" = let
-  Pattern = Lakehouse.Contents([CreateNavigationProperties = false, EnableFolding = false, HierarchicalNavigation = true, EnableVorder = true, OutputMetadataRefresh = true]),
-  Navigation_1 = Pattern{[workspaceId = "033013a2-b416-4b09-96e7-2f911dbac52c"]}[Data],
-  Navigation_2 = Navigation_1{[lakehouseId = "15094689-301b-4cc4-b32a-9fe54b60893a"]}[Data],
-  Navigation_3 = Navigation_2{[Id = "Silver_Layer", ItemKind = "Schema"]}[Data],
-  TableNavigation = Navigation_3{[Id = "Suppliers_Silver", ItemKind = "Table"]}?[Data]?
-in
-  TableNavigation;
-shared #"Silver_Layer Products_DataDestination" = let
-  Pattern = Lakehouse.Contents([CreateNavigationProperties = false, EnableFolding = false, HierarchicalNavigation = true, EnableVorder = true, OutputMetadataRefresh = true]),
-  Navigation_1 = Pattern{[workspaceId = "033013a2-b416-4b09-96e7-2f911dbac52c"]}[Data],
-  Navigation_2 = Navigation_1{[lakehouseId = "15094689-301b-4cc4-b32a-9fe54b60893a"]}[Data],
-  Navigation_3 = Navigation_2{[Id = "Silver_Layer", ItemKind = "Schema"]}[Data],
-  TableNavigation = Navigation_3{[Id = "Products_Silver", ItemKind = "Table"]}?[Data]?
-in
-  TableNavigation;
-shared #"Mapping Products_DataDestination" = let
+shared #"Mapping Employees_DataDestination" = let
   Pattern = Lakehouse.Contents([CreateNavigationProperties = false, EnableFolding = false, HierarchicalNavigation = true, EnableVorder = true, OutputMetadataRefresh = true]),
   Navigation_1 = Pattern{[workspaceId = "033013a2-b416-4b09-96e7-2f911dbac52c"]}[Data],
   Navigation_2 = Navigation_1{[lakehouseId = "15094689-301b-4cc4-b32a-9fe54b60893a"]}[Data],
   Navigation_3 = Navigation_2{[Id = "Mapping_Layer", ItemKind = "Schema"]}[Data],
-  TableNavigation = Navigation_3{[Id = "Products_Mapping", ItemKind = "Table"]}?[Data]?
-in
-  TableNavigation;
-shared #"Silver_Layer CustomerSegments_DataDestination" = let
-  Pattern = Lakehouse.Contents([CreateNavigationProperties = false, EnableFolding = false, HierarchicalNavigation = true, EnableVorder = true, OutputMetadataRefresh = true]),
-  Navigation_1 = Pattern{[workspaceId = "033013a2-b416-4b09-96e7-2f911dbac52c"]}[Data],
-  Navigation_2 = Navigation_1{[lakehouseId = "15094689-301b-4cc4-b32a-9fe54b60893a"]}[Data],
-  Navigation_3 = Navigation_2{[Id = "Silver_Layer", ItemKind = "Schema"]}[Data],
-  TableNavigation = Navigation_3{[Id = "CustomerSegments_Silver", ItemKind = "Table"]}?[Data]?
-in
-  TableNavigation;
-shared #"Silver_Layer Customers_DataDestination" = let
-  Pattern = Lakehouse.Contents([CreateNavigationProperties = false, EnableFolding = false, HierarchicalNavigation = true, EnableVorder = true, OutputMetadataRefresh = true]),
-  Navigation_1 = Pattern{[workspaceId = "033013a2-b416-4b09-96e7-2f911dbac52c"]}[Data],
-  Navigation_2 = Navigation_1{[lakehouseId = "15094689-301b-4cc4-b32a-9fe54b60893a"]}[Data],
-  Navigation_3 = Navigation_2{[Id = "Silver_Layer", ItemKind = "Schema"]}[Data],
-  TableNavigation = Navigation_3{[Id = "Customers_Silver", ItemKind = "Table"]}?[Data]?
-in
-  TableNavigation;
-shared #"Mapping Customers_DataDestination" = let
-  Pattern = Lakehouse.Contents([CreateNavigationProperties = false, EnableFolding = false, HierarchicalNavigation = true, EnableVorder = true, OutputMetadataRefresh = true]),
-  Navigation_1 = Pattern{[workspaceId = "033013a2-b416-4b09-96e7-2f911dbac52c"]}[Data],
-  Navigation_2 = Navigation_1{[lakehouseId = "15094689-301b-4cc4-b32a-9fe54b60893a"]}[Data],
-  Navigation_3 = Navigation_2{[Id = "Mapping_Layer", ItemKind = "Schema"]}[Data],
-  TableNavigation = Navigation_3{[Id = "Customers_Mapping", ItemKind = "Table"]}?[Data]?
-in
-  TableNavigation;
-shared #"Silver_Layer CustomerAddresses_DataDestination" = let
-  Pattern = Lakehouse.Contents([CreateNavigationProperties = false, EnableFolding = false, HierarchicalNavigation = true, EnableVorder = true, OutputMetadataRefresh = true]),
-  Navigation_1 = Pattern{[workspaceId = "033013a2-b416-4b09-96e7-2f911dbac52c"]}[Data],
-  Navigation_2 = Navigation_1{[lakehouseId = "15094689-301b-4cc4-b32a-9fe54b60893a"]}[Data],
-  Navigation_3 = Navigation_2{[Id = "Silver_Layer", ItemKind = "Schema"]}[Data],
-  TableNavigation = Navigation_3{[Id = "CustomerAddresses_Silver", ItemKind = "Table"]}?[Data]?
-in
-  TableNavigation;
-shared #"Silver_Layer Stores_DataDestination" = let
-  Pattern = Lakehouse.Contents([CreateNavigationProperties = false, EnableFolding = false, HierarchicalNavigation = true, EnableVorder = true, OutputMetadataRefresh = true]),
-  Navigation_1 = Pattern{[workspaceId = "033013a2-b416-4b09-96e7-2f911dbac52c"]}[Data],
-  Navigation_2 = Navigation_1{[lakehouseId = "15094689-301b-4cc4-b32a-9fe54b60893a"]}[Data],
-  Navigation_3 = Navigation_2{[Id = "Silver_Layer", ItemKind = "Schema"]}[Data],
-  TableNavigation = Navigation_3{[Id = "Stores_Silver", ItemKind = "Table"]}?[Data]?
-in
-  TableNavigation;
-shared #"Mapping Stores_DataDestination" = let
-  Pattern = Lakehouse.Contents([CreateNavigationProperties = false, EnableFolding = false, HierarchicalNavigation = true, EnableVorder = true, OutputMetadataRefresh = true]),
-  Navigation_1 = Pattern{[workspaceId = "033013a2-b416-4b09-96e7-2f911dbac52c"]}[Data],
-  Navigation_2 = Navigation_1{[lakehouseId = "15094689-301b-4cc4-b32a-9fe54b60893a"]}[Data],
-  Navigation_3 = Navigation_2{[Id = "Mapping_Layer", ItemKind = "Schema"]}[Data],
-  TableNavigation = Navigation_3{[Id = "Stores_Mapping", ItemKind = "Table"]}?[Data]?
+  TableNavigation = Navigation_3{[Id = "employees_mapping", ItemKind = "Table"]}?[Data]?
 in
   TableNavigation;
 shared #"Silver_Layer Employees_DataDestination" = let
@@ -460,14 +388,86 @@ shared #"Silver_Layer Employees_DataDestination" = let
   Navigation_1 = Pattern{[workspaceId = "033013a2-b416-4b09-96e7-2f911dbac52c"]}[Data],
   Navigation_2 = Navigation_1{[lakehouseId = "15094689-301b-4cc4-b32a-9fe54b60893a"]}[Data],
   Navigation_3 = Navigation_2{[Id = "Silver_Layer", ItemKind = "Schema"]}[Data],
-  TableNavigation = Navigation_3{[Id = "Employees_Silver", ItemKind = "Table"]}?[Data]?
+  TableNavigation = Navigation_3{[Id = "employees_silver", ItemKind = "Table"]}?[Data]?
 in
   TableNavigation;
-shared #"Mapping Employees_DataDestination" = let
+shared #"Silver_Layer Stores_DataDestination" = let
+  Pattern = Lakehouse.Contents([CreateNavigationProperties = false, EnableFolding = false, HierarchicalNavigation = true, EnableVorder = true, OutputMetadataRefresh = true]),
+  Navigation_1 = Pattern{[workspaceId = "033013a2-b416-4b09-96e7-2f911dbac52c"]}[Data],
+  Navigation_2 = Navigation_1{[lakehouseId = "15094689-301b-4cc4-b32a-9fe54b60893a"]}[Data],
+  Navigation_3 = Navigation_2{[Id = "Silver_Layer", ItemKind = "Schema"]}[Data],
+  TableNavigation = Navigation_3{[Id = "stores_silver", ItemKind = "Table"]}?[Data]?
+in
+  TableNavigation;
+shared #"Mapping Stores_DataDestination" = let
   Pattern = Lakehouse.Contents([CreateNavigationProperties = false, EnableFolding = false, HierarchicalNavigation = true, EnableVorder = true, OutputMetadataRefresh = true]),
   Navigation_1 = Pattern{[workspaceId = "033013a2-b416-4b09-96e7-2f911dbac52c"]}[Data],
   Navigation_2 = Navigation_1{[lakehouseId = "15094689-301b-4cc4-b32a-9fe54b60893a"]}[Data],
   Navigation_3 = Navigation_2{[Id = "Mapping_Layer", ItemKind = "Schema"]}[Data],
-  TableNavigation = Navigation_3{[Id = "Employees_Mapping", ItemKind = "Table"]}?[Data]?
+  TableNavigation = Navigation_3{[Id = "stores_mapping", ItemKind = "Table"]}?[Data]?
+in
+  TableNavigation;
+shared #"Silver_Layer CustomerAddresses_DataDestination" = let
+  Pattern = Lakehouse.Contents([CreateNavigationProperties = false, EnableFolding = false, HierarchicalNavigation = true, EnableVorder = true, OutputMetadataRefresh = true]),
+  Navigation_1 = Pattern{[workspaceId = "033013a2-b416-4b09-96e7-2f911dbac52c"]}[Data],
+  Navigation_2 = Navigation_1{[lakehouseId = "15094689-301b-4cc4-b32a-9fe54b60893a"]}[Data],
+  Navigation_3 = Navigation_2{[Id = "Silver_Layer", ItemKind = "Schema"]}[Data],
+  TableNavigation = Navigation_3{[Id = "customeraddresses_silver", ItemKind = "Table"]}?[Data]?
+in
+  TableNavigation;
+shared #"Mapping Customers_DataDestination" = let
+  Pattern = Lakehouse.Contents([CreateNavigationProperties = false, EnableFolding = false, HierarchicalNavigation = true, EnableVorder = true, OutputMetadataRefresh = true]),
+  Navigation_1 = Pattern{[workspaceId = "033013a2-b416-4b09-96e7-2f911dbac52c"]}[Data],
+  Navigation_2 = Navigation_1{[lakehouseId = "15094689-301b-4cc4-b32a-9fe54b60893a"]}[Data],
+  Navigation_3 = Navigation_2{[Id = "Mapping_Layer", ItemKind = "Schema"]}[Data],
+  TableNavigation = Navigation_3{[Id = "customers_mapping", ItemKind = "Table"]}?[Data]?
+in
+  TableNavigation;
+shared #"Silver_Layer CustomerSegments_DataDestination" = let
+  Pattern = Lakehouse.Contents([CreateNavigationProperties = false, EnableFolding = false, HierarchicalNavigation = true, EnableVorder = true, OutputMetadataRefresh = true]),
+  Navigation_1 = Pattern{[workspaceId = "033013a2-b416-4b09-96e7-2f911dbac52c"]}[Data],
+  Navigation_2 = Navigation_1{[lakehouseId = "15094689-301b-4cc4-b32a-9fe54b60893a"]}[Data],
+  Navigation_3 = Navigation_2{[Id = "Silver_Layer", ItemKind = "Schema"]}[Data],
+  TableNavigation = Navigation_3{[Id = "customersegments_silver", ItemKind = "Table"]}?[Data]?
+in
+  TableNavigation;
+shared #"Silver_Layer Products_DataDestination" = let
+  Pattern = Lakehouse.Contents([CreateNavigationProperties = false, EnableFolding = false, HierarchicalNavigation = true, EnableVorder = true, OutputMetadataRefresh = true]),
+  Navigation_1 = Pattern{[workspaceId = "033013a2-b416-4b09-96e7-2f911dbac52c"]}[Data],
+  Navigation_2 = Navigation_1{[lakehouseId = "15094689-301b-4cc4-b32a-9fe54b60893a"]}[Data],
+  Navigation_3 = Navigation_2{[Id = "Silver_Layer", ItemKind = "Schema"]}[Data],
+  TableNavigation = Navigation_3{[Id = "products_silver", ItemKind = "Table"]}?[Data]?
+in
+  TableNavigation;
+shared #"Mapping Products_DataDestination" = let
+  Pattern = Lakehouse.Contents([CreateNavigationProperties = false, EnableFolding = false, HierarchicalNavigation = true, EnableVorder = true, OutputMetadataRefresh = true]),
+  Navigation_1 = Pattern{[workspaceId = "033013a2-b416-4b09-96e7-2f911dbac52c"]}[Data],
+  Navigation_2 = Navigation_1{[lakehouseId = "15094689-301b-4cc4-b32a-9fe54b60893a"]}[Data],
+  Navigation_3 = Navigation_2{[Id = "Mapping_Layer", ItemKind = "Schema"]}[Data],
+  TableNavigation = Navigation_3{[Id = "products_mapping", ItemKind = "Table"]}?[Data]?
+in
+  TableNavigation;
+shared #"Silver_Layer Suppliers_DataDestination" = let
+  Pattern = Lakehouse.Contents([CreateNavigationProperties = false, EnableFolding = false, HierarchicalNavigation = true, EnableVorder = true, OutputMetadataRefresh = true]),
+  Navigation_1 = Pattern{[workspaceId = "033013a2-b416-4b09-96e7-2f911dbac52c"]}[Data],
+  Navigation_2 = Navigation_1{[lakehouseId = "15094689-301b-4cc4-b32a-9fe54b60893a"]}[Data],
+  Navigation_3 = Navigation_2{[Id = "Silver_Layer", ItemKind = "Schema"]}[Data],
+  TableNavigation = Navigation_3{[Id = "suppliers_silver", ItemKind = "Table"]}?[Data]?
+in
+  TableNavigation;
+shared #"Silver_Layer Categories_DataDestination" = let
+  Pattern = Lakehouse.Contents([CreateNavigationProperties = false, EnableFolding = false, HierarchicalNavigation = true, EnableVorder = true, OutputMetadataRefresh = true]),
+  Navigation_1 = Pattern{[workspaceId = "033013a2-b416-4b09-96e7-2f911dbac52c"]}[Data],
+  Navigation_2 = Navigation_1{[lakehouseId = "15094689-301b-4cc4-b32a-9fe54b60893a"]}[Data],
+  Navigation_3 = Navigation_2{[Id = "Silver_Layer", ItemKind = "Schema"]}[Data],
+  TableNavigation = Navigation_3{[Id = "categories_silver", ItemKind = "Table"]}?[Data]?
+in
+  TableNavigation;
+shared #"Silver_Layer Customers_DataDestination" = let
+  Pattern = Lakehouse.Contents([CreateNavigationProperties = false, EnableFolding = false, HierarchicalNavigation = true, EnableVorder = true, OutputMetadataRefresh = true]),
+  Navigation_1 = Pattern{[workspaceId = "033013a2-b416-4b09-96e7-2f911dbac52c"]}[Data],
+  Navigation_2 = Navigation_1{[lakehouseId = "15094689-301b-4cc4-b32a-9fe54b60893a"]}[Data],
+  Navigation_3 = Navigation_2{[Id = "Silver_Layer", ItemKind = "Schema"]}[Data],
+  TableNavigation = Navigation_3{[Id = "customers_silver", ItemKind = "Table"]}?[Data]?
 in
   TableNavigation;
