@@ -76,7 +76,7 @@
         "name": "Ingest_Orders_OrderDetails_Silver",
         "dependsOn": [
           {
-            "activity": "Ingest_Bronze",
+            "activity": "Ingest_Silver_Part_1",
             "dependencyConditions": [
               "Succeeded"
             ]
@@ -113,7 +113,7 @@
         "name": "Ingest_Payments_Silver",
         "dependsOn": [
           {
-            "activity": "Ingest_Bronze",
+            "activity": "Ingest_Silver_Part_1",
             "dependencyConditions": [
               "Succeeded"
             ]
@@ -150,7 +150,7 @@
         "name": "Ingest_Returns_Silver",
         "dependsOn": [
           {
-            "activity": "Ingest_Bronze",
+            "activity": "Ingest_Silver_Part_1",
             "dependencyConditions": [
               "Succeeded"
             ]
