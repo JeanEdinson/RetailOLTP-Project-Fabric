@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Dataflow",
+    "displayName": "RetailOLTP_Calendar_Dimension_Gold_Ingestion"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "192afd9a-0793-aba4-4975-91ea43728779"
+  }
+}

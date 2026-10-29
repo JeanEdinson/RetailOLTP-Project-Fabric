@@ -1,0 +1,28 @@
+{
+  "formatVersion": "202502",
+  "computeEngineSettings": {
+    "allowModernEvaluationEngine": true
+  },
+  "name": "RetailOLTP_Calendar_Dimension_Gold_Ingestion",
+  "queryGroups": [],
+  "documentLocale": "es-ES",
+  "queriesMetadata": {
+    "Dim_Calendar": {
+      "queryId": "702817fd-c548-45c0-9c2a-823767b63376",
+      "queryName": "Dim_Calendar"
+    },
+    "Dim_Calendar_DataDestination": {
+      "queryId": "34475dff-475e-495c-bd1b-b2818a6ab81d",
+      "queryName": "Dim_Calendar_DataDestination",
+      "isHidden": true,
+      "loadEnabled": false
+    }
+  },
+  "connections": [
+    {
+      "path": "Warehouse",
+      "kind": "Warehouse",
+      "connectionId": "{\"ClusterId\":\"f636aaff-f5c1-43d5-9930-af0e4d36870a\",\"DatasourceId\":\"7b70a812-f249-4e2b-9f5d-114803bece91\"}"
+    }
+  ]
+}

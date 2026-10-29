@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "RetailOLTP_Dimensions_Staging_Gold_Ingestion"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "392f8da0-5f8f-bf34-49c8-36a9bd16159f"
+  }
+}

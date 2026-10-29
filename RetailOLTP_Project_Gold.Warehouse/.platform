@@ -1,0 +1,12 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Warehouse",
+    "displayName": "RetailOLTP_Project_Gold",
+    "description": ""
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "8733e6ba-5c24-984e-44b8-11333fb044f5"
+  }
+}
