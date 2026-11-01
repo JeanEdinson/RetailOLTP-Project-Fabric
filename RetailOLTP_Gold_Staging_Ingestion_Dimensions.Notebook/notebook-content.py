@@ -100,7 +100,7 @@ df_stores_s = spark.table(ESQUEMA_SILVER + '.stores_silver')
 
 # CELL ********************
 
-# Creacion de la dimension Customers (dim_customers)
+# Creación de la dimensión Customers (dim_customers)
 
 # Broadcast de la dimension de segmentos para optimizar el join
 df_customer_segments_b = F.broadcast(df_customer_segments_s)

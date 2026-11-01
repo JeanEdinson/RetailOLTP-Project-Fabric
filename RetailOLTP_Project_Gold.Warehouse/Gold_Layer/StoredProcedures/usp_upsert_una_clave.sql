@@ -1,4 +1,4 @@
-CREATE   PROCEDURE [Gold_Layer].[usp_upsert_dimension]
+CREATE   PROCEDURE [Gold_Layer].[usp_upsert_una_clave]
     @Tabla          VARCHAR(128),
     @Clave          VARCHAR(128),
     @EsquemaStaging VARCHAR(128) = 'Staging_Layer',

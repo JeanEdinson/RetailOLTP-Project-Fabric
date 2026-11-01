@@ -4,8 +4,8 @@
       {
         "type": "InvokeCopyJob",
         "typeProperties": {
-          "copyJobId": "1b3f89ff-f588-45db-a036-e334824ef581",
-          "workspaceId": "033013a2-b416-4b09-96e7-2f911dbac52c"
+          "copyJobId": "824ef581-e334-a036-45db-f5881b3f89ff",
+          "workspaceId": "00000000-0000-0000-0000-000000000000"
         },
         "externalReferences": {
           "connection": "4488a7b9-17e5-41f8-b05e-eacf7d319d75"
@@ -18,15 +18,13 @@
           "secureOutput": false
         },
         "name": "Ingest_Bronze",
-        "state": "Inactive",
-        "onInactiveMarkAs": "Succeeded",
         "dependsOn": []
       },
       {
         "type": "RefreshDataflow",
         "typeProperties": {
-          "dataflowId": "4ce705af-a4a9-47ab-a31e-3b5fd4f694ba",
-          "workspaceId": "033013a2-b416-4b09-96e7-2f911dbac52c",
+          "dataflowId": "d4f694ba-3b5f-a31e-47ab-a4a94ce705af",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
           "notifyOption": "NoNotification",
           "dataflowType": "DataflowFabric",
           "executeMashupQueriesOnly": true
@@ -39,8 +37,6 @@
           "secureOutput": false
         },
         "name": "Ingest_Silver_Part_1",
-        "state": "Inactive",
-        "onInactiveMarkAs": "Succeeded",
         "dependsOn": [
           {
             "activity": "Ingest_Bronze",
@@ -53,8 +49,8 @@
       {
         "type": "TridentNotebook",
         "typeProperties": {
-          "notebookId": "335f7be6-7ad8-4ac7-9edf-1fcafe3eb9b9",
-          "workspaceId": "033013a2-b416-4b09-96e7-2f911dbac52c",
+          "notebookId": "fe3eb9b9-1fca-9edf-4ac7-7ad8335f7be6",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
           "parameters": {
             "MODO_CARGA": {
               "value": "FULL",
@@ -78,8 +74,6 @@
           "secureOutput": false
         },
         "name": "Ingest_Orders_OrderDetails_Silver",
-        "state": "Inactive",
-        "onInactiveMarkAs": "Succeeded",
         "dependsOn": [
           {
             "activity": "Ingest_Silver_Part_1",
@@ -92,8 +86,8 @@
       {
         "type": "TridentNotebook",
         "typeProperties": {
-          "notebookId": "915a847c-deba-4b33-ad21-19e0efe31f81",
-          "workspaceId": "033013a2-b416-4b09-96e7-2f911dbac52c",
+          "notebookId": "efe31f81-19e0-ad21-4b33-deba915a847c",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
           "parameters": {
             "MODO_CARGA": {
               "value": "FULL",
@@ -117,8 +111,6 @@
           "secureOutput": false
         },
         "name": "Ingest_Payments_Silver",
-        "state": "Inactive",
-        "onInactiveMarkAs": "Succeeded",
         "dependsOn": [
           {
             "activity": "Ingest_Silver_Part_1",
@@ -131,8 +123,8 @@
       {
         "type": "TridentNotebook",
         "typeProperties": {
-          "notebookId": "5ea65d66-9f5e-4a9b-a487-c58b8e93a1ea",
-          "workspaceId": "033013a2-b416-4b09-96e7-2f911dbac52c",
+          "notebookId": "8e93a1ea-c58b-a487-4a9b-9f5e5ea65d66",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
           "parameters": {
             "MODO_CARGA": {
               "value": "FULL",
@@ -156,8 +148,6 @@
           "secureOutput": false
         },
         "name": "Ingest_Returns_Silver",
-        "state": "Inactive",
-        "onInactiveMarkAs": "Succeeded",
         "dependsOn": [
           {
             "activity": "Ingest_Silver_Part_1",
@@ -174,8 +164,8 @@
           "workspaceId": "00000000-0000-0000-0000-000000000000"
         },
         "policy": {
-          "timeout": "0.12:00:00",
-          "retry": 0,
+          "timeout": "0.0:40:00",
+          "retry": 1,
           "retryIntervalInSeconds": 30,
           "secureInput": false,
           "secureOutput": false
@@ -220,8 +210,8 @@
           }
         },
         "policy": {
-          "timeout": "0.12:00:00",
-          "retry": 0,
+          "timeout": "0.0:40:00",
+          "retry": 1,
           "retryIntervalInSeconds": 30,
           "secureInput": false,
           "secureOutput": false
@@ -246,20 +236,14 @@
           "executeMashupQueriesOnly": true
         },
         "policy": {
-          "timeout": "0.12:00:00",
-          "retry": 0,
+          "timeout": "0.0:40:00",
+          "retry": 1,
           "retryIntervalInSeconds": 30,
           "secureInput": false,
           "secureOutput": false
         },
         "name": "Ingest_Calendar_Dimension_Gold",
         "dependsOn": [
-          {
-            "activity": "Ingest_Orders_OrderDetails_Silver",
-            "dependencyConditions": [
-              "Succeeded"
-            ]
-          },
           {
             "activity": "Ingest_Payments_Silver",
             "dependencyConditions": [
@@ -268,6 +252,92 @@
           },
           {
             "activity": "Ingest_Returns_Silver",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "Ingest_Orders_OrderDetails_Silver",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "3ca2f8a7-2128-adf7-46ce-38cbd3946dfc",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "MODO_CARGA": {
+              "value": "RANGO",
+              "type": "string"
+            },
+            "FECHA_INICIO": {
+              "value": "2026-06-01",
+              "type": "string"
+            },
+            "FECHA_FIN": {
+              "value": "2026-06-30",
+              "type": "string"
+            }
+          }
+        },
+        "policy": {
+          "timeout": "0.0:40:00",
+          "retry": 1,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Ingest_Fact_Orders_Staging_Gold",
+        "dependsOn": [
+          {
+            "activity": "Ingest_Dimensions_Gold",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "Ingest_Calendar_Dimension_Gold",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SqlServerStoredProcedure",
+        "typeProperties": {
+          "storedProcedureName": "[Gold_Layer].[usp_upsert_fact_orders]"
+        },
+        "connectionSettings": {
+          "name": "RetailOLTP_Project_Gold",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "8733e6ba-5c24-984e-44b8-11333fb044f5",
+              "endpoint": "v3lrrsdkinye3oe2uxo3xhc2eu-uijtaaywwqeuxfxhf6ir3owffq.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "00000000-0000-0000-0000-000000000000"
+            },
+            "externalReferences": {
+              "connection": "7b70a812-f249-4e2b-9f5d-114803bece91"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.0:40:00",
+          "retry": 1,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Ingest_Fact_Orders_Gold",
+        "dependsOn": [
+          {
+            "activity": "Ingest_Fact_Orders_Staging_Gold",
             "dependencyConditions": [
               "Succeeded"
             ]

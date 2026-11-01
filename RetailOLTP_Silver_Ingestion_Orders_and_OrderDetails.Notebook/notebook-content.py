@@ -22,7 +22,7 @@
 
 # PARAMETERS CELL ********************
 
-# CELDA 1 — PARÁMETROS DEL PIPELINE
+# PARÁMETROS DEL PIPELINE
 
 MODO_CARGA = "RANGO"   # RANGO o FULL
 FECHA_INICIO = ""      # Formato YYYY-MM-DD; vacío = automático
