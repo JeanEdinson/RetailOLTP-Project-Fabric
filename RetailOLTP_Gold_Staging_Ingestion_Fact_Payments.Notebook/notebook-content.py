@@ -51,7 +51,6 @@ FECHA_FIN = ""         # Formato YYYY-MM-DD; vacío = automático
 import pyspark.sql.functions as F
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
-from pyspark.sql.window import Window
 from uuid import uuid4
 from com.microsoft.spark.fabric.Constants import Constants
 
@@ -61,8 +60,8 @@ WAREHOUSE_GOLD = "RetailOLTP_Project_Gold"
 ESQUEMA_STAGING_WAREHOUSE = "Staging_Layer"
 ESQUEMA_GOLD = "Gold_Layer"
 
-FACT_ORDERS_STAGING_GOLD = f"{WAREHOUSE_GOLD}.{ESQUEMA_STAGING_WAREHOUSE}.fact_orders_staging"
-FACT_ORDERS_GOLD = f"{WAREHOUSE_GOLD}.{ESQUEMA_GOLD}.fact_orders"
+FACT_PAYMENTS_STAGING_GOLD = f"{WAREHOUSE_GOLD}.{ESQUEMA_STAGING_WAREHOUSE}.fact_payments_staging"
+FACT_PAYMENTS_GOLD = f"{WAREHOUSE_GOLD}.{ESQUEMA_GOLD}.fact_payments"
 
 BATCH_ID = str(uuid4())
 
@@ -141,33 +140,44 @@ else:
 
 # CELL ********************
 
-df_orders = spark.table(ESQUEMA_SILVER + '.orders_silver')
-df_details = spark.table(ESQUEMA_SILVER + '.ordersdetails_silver')
+# Lectura de tablas en la capa silver
+df_payments = spark.table(ESQUEMA_SILVER + '.payments_silver')
+df_orders = spark.table(ESQUEMA_SILVER + '.orders_silver').select(['OrderID', 'CustomerID', 'StoreID'])
+df_customers = spark.table(ESQUEMA_SILVER + '.customers_silver').select(['CustomerID'])
+df_stores = spark.table(ESQUEMA_SILVER + '.stores_silver').select(['StoreID'])
 
-df_orders = df_orders.withColumn(
-    "OrderDate",
-    F.to_timestamp(F.col("OrderDate"))
+df_payments = df_payments.withColumn(
+    "PaymentDate",
+    F.to_timestamp(F.col("PaymentDate"))
 )
 
 if modo == "RANGO":
-    df_orders = df_orders.filter(
-        (F.col("OrderDate") >= F.lit(str(fecha_inicio)).cast("timestamp"))
-        & (F.col("OrderDate") < F.lit(str(fecha_fin)).cast("timestamp"))
+    df_payments = df_payments.filter(
+        (F.col("PaymentDate") >= F.lit(str(fecha_inicio)).cast("timestamp"))
+        & (F.col("PaymentDate") < F.lit(str(fecha_fin)).cast("timestamp"))
     )
 
-    df_orders_id_validos = df_orders.select("OrderID").distinct()
-    df_details = df_details.join(
-        df_orders_id_validos,
-        on = "OrderID",
-        how = "left_semi"
-    )
+df_orders = df_orders.join(
+    df_payments,
+    on = "OrderID",
+    how = "left_semi"
+)
 
+df_customers = df_customers.join(
+    df_orders,
+    on = "CustomerID",
+    how = "left_semi"
+)
 
-cantidad_seleccionada_orders = df_orders.count()
-cantidad_seleccionada_detalles = df_details.count()
+df_stores = df_stores.join(
+    df_orders,
+    on = "StoreID",
+    how = "left_semi"
+)
 
-print(f"Órdenes seleccionadas: {cantidad_seleccionada_orders}")
-print(f"Detalles de Órdenes seleccionadas: {cantidad_seleccionada_detalles}")
+cantidad_seleccionada_payments = df_payments.count()
+
+print(f"Retornos seleccionados: {cantidad_seleccionada_payments}")
 
 # METADATA ********************
 
@@ -178,74 +188,72 @@ print(f"Detalles de Órdenes seleccionadas: {cantidad_seleccionada_detalles}")
 
 # CELL ********************
 
-# Creación del hecho Orders (fact_orders)
+df_payments.columns
 
-# Calcular el número de detalles por orden
-ventana_order_id = Window.partitionBy(F.col('OrderID'))
-df_details = df_details.withColumn('number_of_details', F.count(F.col('OrderDetailID')).over(ventana_order_id))
+# METADATA ********************
+
+# META {
+# META   "language": "python",
+# META   "language_group": "synapse_pyspark"
+# META }
+
+# CELL ********************
+
+# Creación del hecho Payments (fact_payments)
 
 # Lista de columnas a seleccionar
-columnas_orders = [
-    'o.OrderID',
-    'od.OrderDetailID',
-    'o.CustomerID',
-    'od.ProductID',
-    'o.StoreID',
-    'o.EmployeeID',
-    'o.OrderDate',
-    'o.OrderStatus',
-    'od.Quantity',
-    'od.UnitPrice',
-    'od.DiscountPercent',
-    'od.DiscountAmount',
-    'od.TaxAmount',
-    'o.ShippingAmount',
-    'od.number_of_details'
-]
-
-columnas_orders_ordenados = [
-    'OrderID',
-    'OrderDetailID',
+columnas_payments = [
+    'PaymentID',
     'CustomerID',
-    'ProductID',
     'StoreID',
-    'EmployeeID',
-    'OrderDate',
-    'OrderHour',
-    'OrderStatus',
-    'Quantity',
-    'UnitPrice',
-    'DiscountPercent',
-    'DiscountAmount',
-    'TaxAmount',
-    'ShippingAmount',
-    'LineTotal'
+    'OrderID',
+    'PaymentDate',
+    'PaymentMethod',
+    'PaymentStatus',
+    'Amount'
 ]
 
-# Join entre tabla Orders y OrderDetails
-df_fact_orders_staging = (
-    df_orders.alias('o')
+columnas_payments_ordernados = [
+    'PaymentID',
+    'CustomerID',
+    'StoreID',
+    'OrderID',
+    'PaymentDate',
+    'PaymentHour',
+    'PaymentMethod',
+    'PaymentStatus',
+    'Amount'
+]
+
+# Broadcast de tablas para optimizar el join
+df_stores_b = F.broadcast(df_stores)
+
+# Join entre tablas para obtener CustomerID y StoreID
+df_fact_payments_staging = (
+    df_payments
     .join(
-        df_details.alias('od'),
+        df_orders,
         on='OrderID',
         how='left'
     )
-    .select(columnas_orders)
+    .join(
+        df_customers,
+        on='CustomerID',
+        how='left'
+    )
+    .join(
+        df_stores_b,
+        on='StoreID',
+        how='left'
+    )
+    .select(columnas_payments)
 )
 
-# Dividir valor de ShippingAmount entre el número de detalles de cada orden
-df_fact_orders_staging = df_fact_orders_staging.withColumn(
-    "ShippingAmount",
-    (F.col('ShippingAmount')/F.col('number_of_details')).cast('decimal(18,2)')
-).drop('number_of_details')
-
-# Dividir fecha y hora en dos columnas, y calcular el monto total por detalle de orden
-df_fact_orders_staging = df_fact_orders_staging.withColumns({
-    "OrderHour": F.date_format(F.col("OrderDate"), "HH:mm:ss"),
-    "OrderDate": F.to_date(F.col('OrderDate')),
-    "LineTotal": F.col('Quantity') * F.col('UnitPrice') - F.col('DiscountAmount') + F.col('TaxAmount') + F.col('ShippingAmount')
-}).select(columnas_orders_ordenados)
-
+# Dividir fecha y hora en dos columnas
+df_fact_payments_staging = df_fact_payments_staging.withColumns({
+    "PaymentHour": F.date_format(F.col("PaymentDate"), "HH:mm:ss"),
+    "PaymentDate": F.to_date(F.col('PaymentDate'))
+}).select(columnas_payments_ordernados)
 
 
 # METADATA ********************
@@ -261,13 +269,12 @@ df_fact_orders_staging = df_fact_orders_staging.withColumns({
 
 fecha_procesamiento = spark.sql("SELECT current_timestamp() AS ts").first()["ts"]
 
-df_fact_orders_staging = (
-    df_fact_orders_staging
+df_fact_payments_staging = (
+    df_fact_payments_staging 
     .withColumn("CreatedAt", F.lit(fecha_procesamiento).cast("timestamp"))
     .withColumn("UpdatedAt", F.lit(fecha_procesamiento).cast("timestamp"))
     .withColumn("BatchID",   F.lit(BATCH_ID))
 )
-
 
 # METADATA ********************
 
@@ -281,11 +288,11 @@ df_fact_orders_staging = (
 # Escribir tabla en la capa STAGING del Warehouse
 
 (
-    df_fact_orders_staging.write
+    df_fact_payments_staging.write
       .mode("overwrite")
-      .synapsesql(FACT_ORDERS_STAGING_GOLD)
+      .synapsesql(FACT_PAYMENTS_STAGING_GOLD)
 )
-print(f'Se escribió la tabla {FACT_ORDERS_STAGING_GOLD}')
+print(f'Se escribió la tabla {FACT_PAYMENTS_STAGING_GOLD}')
 
 # METADATA ********************
 
@@ -300,7 +307,7 @@ print(f'Se escribió la tabla {FACT_ORDERS_STAGING_GOLD}')
 
 # Validar existencia en Warehouse
 
-nombre_tabla = FACT_ORDERS_GOLD.split(".")[-1]
+nombre_tabla = FACT_PAYMENTS_GOLD.split(".")[-1]
 
 query = f"""
     SELECT CASE
@@ -327,23 +334,23 @@ resultado = (
 
 try:
     if resultado["existe"] == 1:
-        print(f"La tabla ya existe. Se omite: {FACT_ORDERS_GOLD}")
+        print(f"La tabla ya existe. Se omite: {FACT_PAYMENTS_GOLD}")
 
     else:
         # Obtener el esquema de staging sin registros
-        df_vacio = spark.table(FACT_ORDERS_STAGING_GOLD).limit(0)
+        df_vacio = spark.table(FACT_PAYMENTS_STAGING_GOLD).limit(0)
 
         # Crear la tabla vacía en el Warehouse
         (
             df_vacio.write
             .mode("errorifexists")
-            .synapsesql(FACT_ORDERS_GOLD)
+            .synapsesql(FACT_PAYMENTS_GOLD)
         )
 
-        print(f"Tabla creada correctamente: {FACT_ORDERS_GOLD}")
+        print(f"Tabla creada correctamente: {FACT_PAYMENTS_GOLD}")
 
 except Exception as e:
-    print(f"Error procesando {FACT_ORDERS_GOLD}: {str(e)}")
+    print(f"Error procesando {FACT_PAYMENTS_GOLD}: {str(e)}")
 
 # METADATA ********************
 

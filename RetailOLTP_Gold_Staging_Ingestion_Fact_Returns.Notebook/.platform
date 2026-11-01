@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Notebook",
+    "displayName": "RetailOLTP_Gold_Staging_Ingestion_Fact_Returns"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "9ea423e2-8cee-acd1-44d0-a7f524b78d97"
+  }
+}

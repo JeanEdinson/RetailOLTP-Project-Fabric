@@ -53,15 +53,24 @@
           "workspaceId": "00000000-0000-0000-0000-000000000000",
           "parameters": {
             "MODO_CARGA": {
-              "value": "FULL",
+              "value": {
+                "value": "@pipeline().parameters.modo_carga",
+                "type": "Expression"
+              },
               "type": "string"
             },
             "FECHA_INICIO": {
-              "value": "",
+              "value": {
+                "value": "@pipeline().parameters.fecha_inicio",
+                "type": "Expression"
+              },
               "type": "string"
             },
             "FECHA_FIN": {
-              "value": "",
+              "value": {
+                "value": "@pipeline().parameters.fecha_fin",
+                "type": "Expression"
+              },
               "type": "string"
             }
           }
@@ -90,15 +99,24 @@
           "workspaceId": "00000000-0000-0000-0000-000000000000",
           "parameters": {
             "MODO_CARGA": {
-              "value": "FULL",
+              "value": {
+                "value": "@pipeline().parameters.modo_carga",
+                "type": "Expression"
+              },
               "type": "string"
             },
             "FECHA_INICIO": {
-              "value": "",
+              "value": {
+                "value": "@pipeline().parameters.fecha_inicio",
+                "type": "Expression"
+              },
               "type": "string"
             },
             "FECHA_FIN": {
-              "value": "",
+              "value": {
+                "value": "@pipeline().parameters.fecha_fin",
+                "type": "Expression"
+              },
               "type": "string"
             }
           }
@@ -127,15 +145,24 @@
           "workspaceId": "00000000-0000-0000-0000-000000000000",
           "parameters": {
             "MODO_CARGA": {
-              "value": "FULL",
+              "value": {
+                "value": "@pipeline().parameters.modo_carga",
+                "type": "Expression"
+              },
               "type": "string"
             },
             "FECHA_INICIO": {
-              "value": "",
+              "value": {
+                "value": "@pipeline().parameters.fecha_inicio",
+                "type": "Expression"
+              },
               "type": "string"
             },
             "FECHA_FIN": {
-              "value": "",
+              "value": {
+                "value": "@pipeline().parameters.fecha_fin",
+                "type": "Expression"
+              },
               "type": "string"
             }
           }
@@ -271,15 +298,24 @@
           "workspaceId": "00000000-0000-0000-0000-000000000000",
           "parameters": {
             "MODO_CARGA": {
-              "value": "RANGO",
+              "value": {
+                "value": "@pipeline().parameters.modo_carga",
+                "type": "Expression"
+              },
               "type": "string"
             },
             "FECHA_INICIO": {
-              "value": "2026-06-01",
+              "value": {
+                "value": "@pipeline().parameters.fecha_inicio",
+                "type": "Expression"
+              },
               "type": "string"
             },
             "FECHA_FIN": {
-              "value": "2026-06-30",
+              "value": {
+                "value": "@pipeline().parameters.fecha_fin",
+                "type": "Expression"
+              },
               "type": "string"
             }
           }
@@ -343,7 +379,197 @@
             ]
           }
         ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "9ea423e2-8cee-acd1-44d0-a7f524b78d97",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "MODO_CARGA": {
+              "value": {
+                "value": "@pipeline().parameters.modo_carga",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "FECHA_INICIO": {
+              "value": {
+                "value": "@pipeline().parameters.fecha_inicio",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "FECHA_FIN": {
+              "value": {
+                "value": "@pipeline().parameters.fecha_fin",
+                "type": "Expression"
+              },
+              "type": "string"
+            }
+          }
+        },
+        "policy": {
+          "timeout": "0.0:40:00",
+          "retry": 1,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Ingest_Fact_Returns_Staging_Gold",
+        "dependsOn": [
+          {
+            "activity": "Ingest_Calendar_Dimension_Gold",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "Ingest_Dimensions_Gold",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SqlServerStoredProcedure",
+        "typeProperties": {
+          "storedProcedureName": "[Gold_Layer].[usp_upsert_fact_returns]"
+        },
+        "connectionSettings": {
+          "name": "RetailOLTP_Project_Gold",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "8733e6ba-5c24-984e-44b8-11333fb044f5",
+              "endpoint": "v3lrrsdkinye3oe2uxo3xhc2eu-uijtaaywwqeuxfxhf6ir3owffq.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "00000000-0000-0000-0000-000000000000"
+            },
+            "externalReferences": {
+              "connection": "7b70a812-f249-4e2b-9f5d-114803bece91"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.0:40:00",
+          "retry": 1,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Ingest_Fact_Returns_Gold",
+        "dependsOn": [
+          {
+            "activity": "Ingest_Fact_Returns_Staging_Gold",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "TridentNotebook",
+        "typeProperties": {
+          "notebookId": "736432dd-0a0b-a201-41ea-2d6a9fe847cd",
+          "workspaceId": "00000000-0000-0000-0000-000000000000",
+          "parameters": {
+            "MODO_CARGA": {
+              "value": {
+                "value": "@pipeline().parameters.modo_carga",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "FECHA_INICIO": {
+              "value": {
+                "value": "@pipeline().parameters.fecha_inicio",
+                "type": "Expression"
+              },
+              "type": "string"
+            },
+            "FECHA_FIN": {
+              "value": {
+                "value": "@pipeline().parameters.fecha_fin",
+                "type": "Expression"
+              },
+              "type": "string"
+            }
+          }
+        },
+        "policy": {
+          "timeout": "0.12:00:00",
+          "retry": 0,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Ingest_Fact_Payments_Staging_Gold",
+        "dependsOn": [
+          {
+            "activity": "Ingest_Calendar_Dimension_Gold",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          },
+          {
+            "activity": "Ingest_Dimensions_Gold",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
+      },
+      {
+        "type": "SqlServerStoredProcedure",
+        "typeProperties": {
+          "storedProcedureName": "[Gold_Layer].[usp_upsert_fact_payments]"
+        },
+        "connectionSettings": {
+          "name": "RetailOLTP_Project_Gold",
+          "properties": {
+            "type": "DataWarehouse",
+            "typeProperties": {
+              "artifactId": "8733e6ba-5c24-984e-44b8-11333fb044f5",
+              "endpoint": "v3lrrsdkinye3oe2uxo3xhc2eu-uijtaaywwqeuxfxhf6ir3owffq.datawarehouse.fabric.microsoft.com",
+              "workspaceId": "00000000-0000-0000-0000-000000000000"
+            },
+            "externalReferences": {
+              "connection": "7b70a812-f249-4e2b-9f5d-114803bece91"
+            },
+            "annotations": []
+          }
+        },
+        "policy": {
+          "timeout": "0.0:40:00",
+          "retry": 1,
+          "retryIntervalInSeconds": 30,
+          "secureInput": false,
+          "secureOutput": false
+        },
+        "name": "Ingest_Fact_Payments_Gold",
+        "dependsOn": [
+          {
+            "activity": "Ingest_Fact_Payments_Staging_Gold",
+            "dependencyConditions": [
+              "Succeeded"
+            ]
+          }
+        ]
       }
-    ]
+    ],
+    "parameters": {
+      "modo_carga": {
+        "type": "string",
+        "defaultValue": "RANGO"
+      },
+      "fecha_inicio": {
+        "type": "string"
+      },
+      "fecha_fin": {
+        "type": "string"
+      }
+    }
   }
 }
