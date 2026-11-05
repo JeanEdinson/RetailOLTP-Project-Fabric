@@ -15,7 +15,7 @@
 
 </div>
 
-> **En una frase:** datos transaccionales "sucios" de una empresa retail ficticia viajan desde un **SQL Server local** hasta un **modelo estrella en Microsoft Fabric**. En el camino se ingieren, limpian, estandarizan, enriquecen y modelan a través de las capas **Bronze → Silver → Gold**, con cargas incrementales parametrizadas, UPSERTs validados y ejecución diaria automatizada.
+> **En una frase:** RetailOLTP, una cadena retail ficticia con 15 tiendas en el Perú, registra su operación en un SQL Server local con datos duplicados, inconsistentes y sin estructura analítica. Este proyecto construye en **Microsoft Fabric** un pipeline automatizado que, cada día, lleva esos datos por las capas **Bronze → Silver → Gold** y los entrega **limpios, integrados y modelados en un esquema estrella** listo para Power BI.
 
 > 📚 Cada sección incluye un bloque desplegable **Fundamento técnico** que explica el porqué de las decisiones tomadas.
 
@@ -45,14 +45,67 @@
 
 ## Resumen del proyecto
 
-| | |
-|---|---|
-| 🎯 **Objetivo** | Trasladar datos transaccionales a un entorno analítico confiable que se actualice automáticamente. |
-| 🧩 **Reto** | Alrededor del 10 % de los registros de origen tiene errores intencionales: formatos mixtos, idiomas mezclados, nulos, duplicados, montos incoherentes y fechas imposibles. |
-| 🏗️ **Solución** | Pipeline en Microsoft Fabric con arquitectura medallón: **Lakehouse** para Bronze y Silver, **Warehouse** para Gold. |
-| ✅ **Resultado** | Modelo estrella con **5 dimensiones compartidas y 3 hechos**, actualizado a diario y consumible desde Power BI en modo **DirectLake**. |
+### 🏪 El contexto
 
-**Cifras clave del diseño**
+**RetailOLTP** es una cadena retail ficticia que opera en el Perú. Vende productos de electrónica, cómputo, telefonía, hogar, cocina, deportes, ropa, belleza, libros y juguetes.
+
+| 15 | 100 | ~1 000 | 500 | 30 |
+|:---:|:---:|:---:|:---:|:---:|
+| tiendas en 15 ciudades | colaboradores | clientes en 5 segmentos | productos en 10 categorías | proveedores |
+
+Toda la operación (pedidos, líneas de pedido, pagos y devoluciones) se registra en una **base de datos transaccional SQL Server instalada en un servidor local**. Para simular el día a día del negocio, un generador en Python:
+
+- crea pedidos desde 2023, con descuentos, **IGV de 18 %** y costo de envío;
+- registra pagos y devoluciones;
+- modifica registros existentes, como ocurre en un sistema real: clientes que cambian de segmento, productos que cambian de precio, pedidos que cambian de estado.
+
+### ⚠️ El problema
+
+El negocio quiere analizar sus ventas, devoluciones y pagos, pero los datos no están listos para eso:
+
+| Problema | Cómo se manifiesta |
+|---|---|
+| 🗄️ **Un sistema diseñado para operar, no para analizar** | El modelo está normalizado en 11 tablas. Cualquier reporte requiere muchos *joins* y compite por recursos con la operación diaria. |
+| 🧹 **Datos poco confiables** | Alrededor del 10 % de los registros tiene errores: `Activo`, `ACTIVE` y `A` para el mismo estado; `Electrónica` y `Electronics` como categorías distintas; emails sin `@`; cantidades negativas; descuentos de 150 %; pagos registrados antes del pedido; totales que no cuadran. |
+| 👥 **Catálogos duplicados** | El mismo cliente, producto o tienda aparece varias veces con IDs distintos. Los conteos se inflan y las referencias se dispersan. |
+| 🔄 **Datos que cambian en el tiempo** | Clientes, productos y pedidos se modifican después de registrarse. Un análisis confiable debe reflejar esos cambios sin duplicar información. |
+| 🔒 **Datos aislados** | La información vive en un servidor local, fuera del alcance de herramientas analíticas en la nube. |
+| ⏳ **Sin actualización automática** | Cada reporte dependería de extracciones manuales. |
+
+### 💡 La solución
+
+Se construyó una **plataforma analítica en Microsoft Fabric** que, cada día y sin intervención manual, lleva los datos desde el servidor local hasta un modelo listo para Power BI:
+
+| # | Paso | Qué se hace | Problema que resuelve |
+|:---:|---|---|---|
+| 1 | 🔌 **Conectar** | Un **On-premises Data Gateway** y un **Copy Job** copian el origen en la capa **Bronze** con método merge | Datos aislados, carga sobre el OLTP |
+| 2 | 🧹 **Limpiar y unificar** | En la capa **Silver**, **Dataflow Gen2** estandariza los maestros y consolida duplicados con tablas de mapeo de IDs; **notebooks PySpark** limpian las transacciones y recalculan montos | Datos poco confiables, catálogos duplicados |
+| 3 | ⭐ **Modelar** | En la capa **Gold**, un **esquema estrella** (5 dimensiones compartidas y 3 hechos) en un Warehouse, cargado con **UPSERTs validados** | Modelo no apto para análisis, datos que cambian |
+| 4 | ⚙️ **Automatizar** | Un **pipeline** único con parámetros, reintentos y ejecución diaria a las 3:00 a. m., que reprocesa los últimos 30 días | Sin actualización automática |
+| 5 | 📊 **Consumir** | **Power BI en modo DirectLake**, sin copias de datos ni actualizaciones adicionales | Acceso a los datos desde BI |
+
+### 🔁 Antes y después
+
+| | Antes | Después |
+|---|---|---|
+| **Ubicación** | Servidor SQL Server local | OneLake (Microsoft Fabric) |
+| **Calidad** | ~10 % de registros con errores | Valores estandarizados y montos coherentes |
+| **Duplicados** | Mismo registro con varios IDs | Registros consolidados con integridad referencial |
+| **Modelo** | 11 tablas normalizadas (OLTP) | Esquema estrella: 5 dimensiones + 3 hechos |
+| **Cambios** | Sin trazabilidad | UPSERT con `CreatedAt`, `UpdatedAt` y `BatchID` |
+| **Actualización** | Manual | Diaria y automática |
+| **Consumo** | Consultas SQL sobre el sistema operativo | Power BI con DirectLake |
+
+### 🎯 Preguntas de negocio que el modelo puede responder
+
+- ¿Cuánto vende cada tienda, ciudad y categoría por mes, trimestre o año?
+- ¿Qué segmentos de clientes generan más ingresos?
+- ¿Qué productos tienen mayor tasa de devolución y por qué motivos?
+- ¿Cuál es el margen estimado por producto (precio de venta frente a costo)?
+- ¿Qué métodos de pago prefieren los clientes y cuántos pagos quedan pendientes?
+- ¿En qué franjas horarias se concentran las ventas?
+
+### 📐 Cifras clave del diseño
 
 | 11 | 3 | 5 + 3 | 2 | 1 |
 |:---:|:---:|:---:|:---:|:---:|
@@ -65,7 +118,7 @@
 ```mermaid
 flowchart LR
     GEN["🐍 Generador Python<br/>generate_retail_data.py"] --> SQL[("🗄️ SQL Server<br/>RetailOLTP")]
-    SQL -->|On-premises Data Gateway| CP["Copy Data"]
+    SQL -->|On-premises Data Gateway| CJ["Copy Job<br/>RetailOLTP_CopyJob"]
 
     subgraph LH["🏠 Lakehouse · RetailOLTP_Project_Bronze_Silver"]
         BR["🥉 Bronze_Layer"]
@@ -79,7 +132,7 @@ flowchart LR
         GL["🥇 Gold_Layer"]
     end
 
-    CP --> BR
+    CJ --> BR
     BR --> DF["Dataflow Gen2<br/>tablas maestras"]
     DF --> SL
     DF --> MAP
@@ -118,13 +171,14 @@ Separar responsabilidades facilita depurar errores (se sabe en qué capa ocurri�
 | Origen | **SQL Server** | Base transaccional `RetailOLTP` (11 tablas) |
 | Simulación | **Python** (Faker, pyodbc, python-dotenv) | Generación e inserción de datos con errores intencionales |
 | Conectividad | **On-premises Data Gateway** | Puente seguro entre SQL Server local y Fabric |
-| Ingesta | **Fabric Data Pipeline** (Copy Data) | Carga a Bronze con escritura tipo merge |
+| Ingesta | **Fabric Copy Job** | Copia de las 11 tablas a Bronze con método merge |
 | Limpieza de maestros | **Dataflow Gen2** (Power Query M) | Estandarización, deduplicación y tablas de mapeo |
 | Limpieza de transacciones | **Fabric Notebooks** (PySpark) | Limpieza, recálculo de montos y UPSERT a Silver |
 | Modelado Gold | **Fabric Notebooks** (PySpark) | Construcción de dimensiones y hechos |
 | Almacenamiento Bronze/Silver | **Lakehouse** (Delta Lake) | Esquemas `Bronze_Layer`, `Mapping_Layer`, `Staging_Layer` y `Silver_Layer` |
 | Almacenamiento Gold | **Warehouse** (T-SQL) | Esquemas `Staging_Layer` y `Gold_Layer` |
 | Carga final | **Stored Procedures** | UPSERT genérico y validado |
+| Orquestación | **Fabric Data Pipeline** | Ejecución ordenada de todas las etapas, parámetros, reintentos y programación diaria |
 | Consumo | **Power BI** (DirectLake) | Lectura directa del modelo Gold |
 | Versionado | **Git integration** de Fabric + GitHub | Control de versiones del workspace |
 
@@ -136,7 +190,7 @@ Separar responsabilidades facilita depurar errores (se sabe en qué capa ocurri�
 |---|---|---|---|
 | Almacenar Bronze y Silver | **Lakehouse** | Warehouse | Spark y Delta Lake permiten transformaciones flexibles y a escala, con esquemas que pueden evolucionar. Es el entorno natural de la ingeniería de datos. |
 | Almacenar Gold | **Warehouse** | Lakehouse | Ofrece T-SQL completo con escritura, transacciones ACID y **procedimientos almacenados**. El endpoint SQL del Lakehouse es de **solo lectura**, así que no permite UPSERTs con T-SQL. |
-| Ingestar desde SQL Server local | **Copy Data + Gateway** | Notebook con JDBC | Actividad nativa, sin código, con conectores administrados. El Gateway resuelve la conexión segura con la red local. |
+| Ingestar desde SQL Server local | **Copy Job + Gateway** | Actividad Copy Data / Notebook con JDBC | Copia varias tablas en un solo elemento, con carga incremental y método merge integrados y sin código. El Gateway resuelve la conexión segura con la red local. |
 | Limpiar tablas maestras | **Dataflow Gen2** | Notebook | Poco volumen y transformaciones típicas de Power Query (recortar espacios, reemplazar valores, quitar duplicados). Cada paso queda visible y es fácil de mantener. |
 | Limpiar tablas transaccionales | **Notebooks PySpark** | Dataflow Gen2 | Mayor volumen y lógica compleja: recálculo de montos, reasignación de IDs y MERGE en Delta. Spark distribuye el procesamiento y el código es parametrizable y versionable. |
 | Generar el calendario | **Dataflow Gen2 (M)** | Notebook | Es una tabla generada (no proviene del origen), sencilla de construir con funciones de fecha de M. |
@@ -266,7 +320,7 @@ Al controlar qué errores existen y en qué proporción, cada regla de limpieza 
 
    ![Lakehouse Bronze/Silver][img-02]
 
-3. **Pipeline orquestador**, que contiene todo el flujo de los datos.
+3. **Pipeline `RetailOLTP_Project_Pipeline`**, que orquesta todo el flujo de los datos.
 
    ![Creación del pipeline][img-03]
 
@@ -275,14 +329,14 @@ Al controlar qué errores existen y en qué proporción, cada regla de limpieza 
 
 <br>
 
-La integración de Fabric con Git guarda la definición de cada artefacto (pipelines, notebooks, dataflows, lakehouse, warehouse) como archivos en el repositorio. Esto permite:
+La integración de Fabric con Git guarda la definición de cada elemento (pipelines, Copy Jobs, notebooks, dataflows, lakehouse, warehouse) como archivos en el repositorio. Esto permite:
 
 - **Historial y trazabilidad:** quién cambió qué y cuándo.
 - **Reversión:** volver a una versión estable si un cambio rompe el pipeline.
 - **Trabajo por ramas:** desarrollar cambios sin afectar la versión productiva.
 - **Base para CI/CD:** promover cambios entre entornos (desarrollo → producción).
 
-Configurarlo antes de desarrollar asegura que **todo** el proyecto quede versionado desde el primer artefacto.
+Configurarlo antes de desarrollar asegura que **todo** el proyecto quede versionado desde el primer elemento.
 
 </details>
 
@@ -290,50 +344,61 @@ Configurarlo antes de desarrollar asegura que **todo** el proyecto quede version
 
 ## Capa Bronze: ingesta
 
-![Actividad Copy Data][img-04-01]
+![Copy Job][img-04-01]
 
 - **Conectividad:** se instaló un **On-premises Data Gateway** que apunta a SQL Server.
-- **Actividad Copy Data:**
-  - **Origen:** todas las tablas de negocio de `RetailOLTP`, a través del Gateway.
+- **Copy Job `RetailOLTP_CopyJob`**, ejecutado desde el pipeline:
+  - **Origen:** las 11 tablas de negocio de `RetailOLTP`, a través del Gateway.
   - **Destino:** esquema `Bronze_Layer` del Lakehouse.
-  - **Lectura:** carga incremental. Como el origen no tiene columnas de fecha de actualización, se leen las tablas completas.
-  - **Escritura:** **merge (combinar)**, con las columnas de fusión (clave) definidas para cada tabla.
+  - **Modo de copia:** incremental. Como el origen no tiene columnas de fecha de actualización, se configuró para leer las tablas completas en cada ejecución.
+  - **Método de actualización:** **merge (combinar)**, con las columnas clave definidas para cada tabla.
   - **Mapeo:** asignación explícita de columnas de origen a destino.
 
 <details>
-<summary>📸 Ver configuración completa de Copy Data</summary>
+<summary>📸 Ver configuración completa del Copy Job</summary>
 
 <br>
 
-![Copy Data 02][img-04-02]
+![Copy Job 02][img-04-02]
 
-![Copy Data 03][img-04-03]
+![Copy Job 03][img-04-03]
 
-![Copy Data 04][img-04-04]
+![Copy Job 04][img-04-04]
 
-![Copy Data 05][img-04-05]
+![Copy Job 05][img-04-05]
 
-![Copy Data 06][img-04-06]
+![Copy Job 06][img-04-06]
 
-![Copy Data 07][img-04-07]
+![Copy Job 07][img-04-07]
 
-![Copy Data 08][img-04-08]
+![Copy Job 08][img-04-08]
 
-![Copy Data 09][img-04-09]
+![Copy Job 09][img-04-09]
 
-![Copy Data 10][img-04-10]
+![Copy Job 10][img-04-10]
 
 </details>
 
 <details>
-<summary><b>📚 Fundamento técnico: Gateway, escritura merge y lectura completa</b></summary>
+<summary><b>📚 Fundamento técnico: Gateway, Copy Job, método merge y lectura completa</b></summary>
 
 <br>
 
 **¿Por qué un On-premises Data Gateway?**
 Fabric es un servicio en la nube y SQL Server está en una red local. El Gateway se instala dentro de esa red y abre una conexión **solo de salida** hacia Azure. No hace falta exponer el servidor a internet ni abrir puertos de entrada en el firewall, y las credenciales se guardan cifradas.
 
-**¿Por qué escritura merge y no append u overwrite?**
+**¿Por qué un Copy Job y no una actividad Copy Data?**
+
+| Aspecto | Actividad Copy Data | Copy Job ✅ |
+|---|---|---|
+| Varias tablas | Una actividad por tabla, o un ForEach con Lookup y parámetros | Las 11 tablas configuradas en un solo elemento |
+| Carga incremental | Lógica de marca de agua manual (Lookup + tabla de control) | Integrada en el propio Copy Job |
+| Configuración | Diseño de actividades dentro del pipeline | Asistente guiado, sin código |
+| Reutilización | Vive dentro de un pipeline | Elemento independiente: se puede ejecutar solo, programar o invocar desde un pipeline |
+
+Invocarlo desde el pipeline mantiene el **orden de ejecución**: Silver solo empieza cuando Bronze terminó correctamente.
+
+**¿Por qué el método merge y no append u overwrite?**
 
 | Método | Comportamiento | Problema en este proyecto |
 |---|---|---|
@@ -358,6 +423,8 @@ La capa Silver trata las tablas de forma distinta según su tipo.
 
 ![Dataflow Gen2 Silver][img-05]
 
+**Elemento:** `RetailOLTP_Silver_Ingestion_Part_1`
+
 **Entidades:** Categories, Suppliers, Products, CustomerSegments, Customers, CustomerAddresses, Stores y Employees.
 
 | Paso | Descripción |
@@ -381,7 +448,7 @@ Cuando un catálogo se reinserta, la base de datos asigna un nuevo `IDENTITY` al
 Si los registros `ID 3` e `ID 57` se consolidan en `ID 3`, los pedidos que apuntaban al `57` quedarían **huérfanos**. La tabla de mapeo (`57 → 3`) funciona como una tabla de equivalencias que permite reasignar las referencias en las tablas transaccionales.
 
 **¿Por qué solo se exportan cuatro mapeos?**
-Las tablas transaccionales solo referencian a **Customers** y **Stores/Employees** (desde Orders) y a **Products** (desde OrderDetails). Categories, Suppliers y CustomerSegments solo son referenciadas por otras tablas maestras, así que sus mapeos se resuelven dentro del mismo Dataflow.
+Las tablas transaccionales solo referencian a **Customers**, **Stores** y **Employees** (desde Orders) y a **Products** (desde OrderDetails). Categories, Suppliers y CustomerSegments solo son referenciadas por otras tablas maestras, así que sus mapeos se resuelven dentro del mismo Dataflow.
 
 </details>
 
@@ -456,7 +523,7 @@ Los datos transaccionales pueden **llegar tarde** o **cambiar después** de regi
 Sigue el patrón **Write → Audit → Publish**: los datos se escriben en un área temporal, se validan y solo después se publican en la capa final. Si algo falla a mitad del proceso, la capa Silver no queda en un estado inconsistente.
 
 **¿Por qué UPSERT con MERGE en Delta Lake?**
-Delta Lake aporta transacciones **ACID** sobre archivos Parquet y la operación `MERGE` inserta registros nuevos y actualiza los modificados en una sola operación atómica.
+Delta Lake aporta transacciones **ACID** sobre archivos Parquet, y la operación `MERGE` inserta registros nuevos y actualiza los modificados en una sola operación atómica.
 
 **¿Para qué sirven las columnas de auditoría?**
 Dan **trazabilidad** (*data lineage*) a cada fila:
@@ -686,7 +753,7 @@ Para Gold se eligió un **Warehouse** (`RetailOLTP_Project_Gold`), con dos esque
 
 ### DimCalendar con Dataflow Gen2
 
-Se construyó con lenguaje M y la interfaz gráfica, y se añadió al pipeline con una actividad de flujo de datos.
+**Elemento:** `RetailOLTP_Calendar_Dimension_Gold_Ingestion`. Se construyó con lenguaje M y la interfaz gráfica, y se añadió al pipeline con una actividad de flujo de datos.
 
 ![Dataflow DimCalendar][img-09-1]
 
@@ -706,7 +773,14 @@ Se construyó con lenguaje M y la interfaz gráfica, y se añadió al pipeline c
 
 ### Notebooks de Gold
 
-Hay **4 notebooks**: uno para las dimensiones y uno por cada hecho. Los notebooks de hechos reciben los mismos parámetros `MODO_CARGA`, `FECHA_INICIO` y `FECHA_FIN`.
+| Notebook | Construye |
+|---|---|
+| `RetailOLTP_Gold_Staging_Ingestion_Dimensions` | `dim_customers`, `dim_products`, `dim_employees`, `dim_stores` |
+| `RetailOLTP_Gold_Staging_Ingestion_Fact_Orders` | `fact_orders` |
+| `RetailOLTP_Gold_Staging_Ingestion_Fact_Payments` | `fact_payments` |
+| `RetailOLTP_Gold_Staging_Ingestion_Fact_Returns` | `fact_returns` |
+
+Los notebooks de hechos reciben los mismos parámetros `MODO_CARGA`, `FECHA_INICIO` y `FECHA_FIN` que los de Silver.
 
 - Selección de columnas y joins, con **broadcast join** para tablas pequeñas como Categories y CustomerSegments.
 - Agregaciones con **funciones de ventana**.
@@ -803,7 +877,7 @@ EXEC [Gold_Layer].[usp_upsert_fact_payments];  -- una clave: PaymentID
 EXEC [Gold_Layer].[usp_upsert_fact_returns];   -- una clave: ReturnID
 ```
 
-📄 Código completo: [`sql/warehouse/`][file-warehouse]
+📄 Código completo: [`sql/warehouse/`][file-warehouse]. Los procedimientos también forman parte de la definición del Warehouse sincronizada por Fabric.
 
 <details>
 <summary>📸 Ver procedimientos en el Warehouse</summary>
@@ -830,7 +904,7 @@ EXEC [Gold_Layer].[usp_upsert_fact_returns];   -- una clave: ReturnID
 <br>
 
 **¿Por qué procedimientos genéricos con SQL dinámico?**
-En lugar de escribir un UPSERT por tabla (8 casi idénticos), los procedimientos leen la estructura desde `INFORMATION_SCHEMA.COLUMNS` y construyen las sentencias en tiempo de ejecución. Es un enfoque **guiado por metadatos** que aplica el principio **DRY** (*Don't Repeat Yourself*): una corrección o mejora se hace una sola vez y aplica a todas las tablas. `QUOTENAME` protege los nombres de objetos dentro del SQL dinámico.
+En lugar de escribir un UPSERT por tabla (siete casi idénticos), los procedimientos leen la estructura desde `INFORMATION_SCHEMA.COLUMNS` y construyen las sentencias en tiempo de ejecución. Es un enfoque **guiado por metadatos** que aplica el principio **DRY** (*Don't Repeat Yourself*): una corrección o mejora se hace una sola vez y aplica a todas las tablas. `QUOTENAME` protege los nombres de objetos dentro del SQL dinámico.
 
 **¿Por qué validar antes de escribir?**
 Es el principio **fail fast** (fallar pronto): es preferible detener la carga con un error claro que escribir datos incorrectos en la capa que consume el negocio.
@@ -859,14 +933,14 @@ Es un patrón explícito y fácil de leer, devuelve por separado el número de f
 
 ![Pipeline completo][img-12]
 
-### Etapas del pipeline
+### Etapas del pipeline `RetailOLTP_Project_Pipeline`
 
 | # | Etapa | Actividad |
 |:---:|---|---|
-| 1 | Bronze | Copy Data (SQL Server → Lakehouse) |
-| 2 | Silver: maestros | Dataflow Gen2 |
+| 1 | Bronze | Copy Job `RetailOLTP_CopyJob` (SQL Server → Lakehouse) |
+| 2 | Silver: maestros | Dataflow Gen2 `RetailOLTP_Silver_Ingestion_Part_1` |
 | 3 | Silver: transacciones | 3 notebooks PySpark |
-| 4 | Gold: calendario | Dataflow Gen2 |
+| 4 | Gold: calendario | Dataflow Gen2 `RetailOLTP_Calendar_Dimension_Gold_Ingestion` |
 | 5 | Gold: dimensiones | Notebook + `usp_upsert_dimensiones` |
 | 6 | Gold: hechos | 3 notebooks + `usp_upsert_fact_*` |
 
@@ -977,10 +1051,10 @@ Ejecuta [`sql/oltp/RetailOLTP_DDL.sql`][file-ddl] en SQL Server.
 ### 2. Configurar y ejecutar el generador
 
 ```bash
-pip install pyodbc faker python-dotenv
+pip install -r generator/requirements.txt
 ```
 
-Crea un archivo `.env`:
+Copia `.env.example` como `.env` en la raíz del repositorio y completa tus datos:
 
 ```env
 SQL_SERVER=localhost
@@ -1001,21 +1075,44 @@ python generator/generate_retail_data.py --mode generate-and-update --orders 200
 
 ### 3. Configurar Microsoft Fabric
 
-1. Crea un workspace y conéctalo a este repositorio (**Workspace settings → Git integration**).
-2. Instala y configura el **On-premises Data Gateway** apuntando a SQL Server.
-3. Sincroniza los artefactos del repositorio con el workspace.
-4. Crea en el Warehouse los procedimientos de [`sql/warehouse/`][file-warehouse].
-5. Ejecuta el pipeline con `modo_carga = FULL` para la carga inicial.
-6. Activa la programación diaria.
+1. Crea un workspace y conéctalo a este repositorio (**Workspace settings → Git integration**), dejando la carpeta de Git en la raíz.
+2. Sincroniza los elementos de Fabric del repositorio con el workspace.
+3. Instala y configura el **On-premises Data Gateway** apuntando a SQL Server, y actualiza la conexión de origen del Copy Job `RetailOLTP_CopyJob`.
+4. Vincula los notebooks al Lakehouse del nuevo workspace.
+5. Verifica que el Warehouse tenga los procedimientos almacenados. Si no aparecen, ejecuta los scripts de [`sql/warehouse/`][file-warehouse].
+6. Ejecuta el pipeline con `modo_carga = FULL` para la carga inicial.
+7. Activa la programación diaria.
 
 ---
 
 ## Estructura del repositorio
 
+Los elementos de Fabric se sincronizan en la raíz del repositorio mediante la integración con Git. Junto a ellos se agregaron tres carpetas con el código y la documentación que no forman parte del workspace.
+
 ```text
 RetailOLTP-Project-Fabric/
+│
+│  ── Elementos de Fabric (sincronizados por Git integration) ──
+│
+├── RetailOLTP_Project_Pipeline.DataPipeline/              # Orquestador
+├── RetailOLTP_CopyJob.CopyJob/                            # Bronze
+├── RetailOLTP_Project_Bronze_Silver.Lakehouse/            # Bronze + Silver
+├── RetailOLTP_Silver_Ingestion_Part_1.Dataflow/           # Silver · maestros
+├── RetailOLTP_Silver_Ingestion_Orders_and_OrderDetails.Notebook/
+├── RetailOLTP_Silver_Ingestion_Payments.Notebook/
+├── RetailOLTP_Silver_Ingestion_Returns.Notebook/
+├── RetailOLTP_Project_Gold.Warehouse/                     # Gold
+├── RetailOLTP_Calendar_Dimension_Gold_Ingestion.Dataflow/
+├── RetailOLTP_Gold_Staging_Ingestion_Dimensions.Notebook/
+├── RetailOLTP_Gold_Staging_Ingestion_Fact_Orders.Notebook/
+├── RetailOLTP_Gold_Staging_Ingestion_Fact_Payments.Notebook/
+├── RetailOLTP_Gold_Staging_Ingestion_Fact_Returns.Notebook/
+│
+│  ── Agregadas manualmente ──
+│
 ├── generator/
-│   └── generate_retail_data.py
+│   ├── generate_retail_data.py
+│   └── requirements.txt
 ├── sql/
 │   ├── oltp/
 │   │   └── RetailOLTP_DDL.sql
@@ -1026,12 +1123,40 @@ RetailOLTP-Project-Fabric/
 │       ├── usp_upsert_fact_orders.sql
 │       ├── usp_upsert_fact_payments.sql
 │       └── usp_upsert_fact_returns.sql
-├── fabric/                      # Artefactos sincronizados por Git integration
-├── docs/
-│   └── images/
+├── images/
 ├── .env.example
+├── .gitignore
 └── README.md
 ```
+
+### Mapa de elementos de Fabric
+
+| Elemento | Tipo | Capa | Función |
+|---|---|---|---|
+| `RetailOLTP_Project_Pipeline` | Data Pipeline | Orquestación | Ejecuta todo el flujo en orden, con parámetros, reintentos y programación diaria |
+| `RetailOLTP_CopyJob` | Copy Job | 🥉 Bronze | Copia las tablas de SQL Server al esquema `Bronze_Layer` mediante el Gateway |
+| `RetailOLTP_Project_Bronze_Silver` | Lakehouse | 🥉 Bronze · 🥈 Silver | Esquemas `Bronze_Layer`, `Mapping_Layer`, `Staging_Layer` y `Silver_Layer` |
+| `RetailOLTP_Silver_Ingestion_Part_1` | Dataflow Gen2 | 🥈 Silver | Limpia y deduplica las tablas maestras; genera las tablas `*_mapping` |
+| `RetailOLTP_Silver_Ingestion_Orders_and_OrderDetails` | Notebook PySpark | 🥈 Silver | Limpieza y UPSERT de Orders y OrderDetails |
+| `RetailOLTP_Silver_Ingestion_Payments` | Notebook PySpark | 🥈 Silver | Limpieza y UPSERT de Payments |
+| `RetailOLTP_Silver_Ingestion_Returns` | Notebook PySpark | 🥈 Silver | Limpieza y UPSERT de Returns |
+| `RetailOLTP_Project_Gold` | Warehouse | 🥇 Gold | Esquemas `Staging_Layer` y `Gold_Layer`, y procedimientos de UPSERT |
+| `RetailOLTP_Calendar_Dimension_Gold_Ingestion` | Dataflow Gen2 | 🥇 Gold | Genera `DimCalendar` |
+| `RetailOLTP_Gold_Staging_Ingestion_Dimensions` | Notebook PySpark | 🥇 Gold | Construye las 4 dimensiones en staging |
+| `RetailOLTP_Gold_Staging_Ingestion_Fact_Orders` | Notebook PySpark | 🥇 Gold | Construye `fact_orders` en staging |
+| `RetailOLTP_Gold_Staging_Ingestion_Fact_Payments` | Notebook PySpark | 🥇 Gold | Construye `fact_payments` en staging |
+| `RetailOLTP_Gold_Staging_Ingestion_Fact_Returns` | Notebook PySpark | 🥇 Gold | Construye `fact_returns` en staging |
+
+> Las carpetas de Fabric guardan solo la **definición** de cada elemento; los datos permanecen en OneLake.
+
+### Carpetas agregadas
+
+| Carpeta | Contenido |
+|---|---|
+| `generator/` | Script Python que simula la operación del negocio |
+| `sql/oltp/` | Script de creación de la base de datos origen |
+| `sql/warehouse/` | Procedimientos almacenados del Warehouse en archivos `.sql` independientes, para leerlos sin abrir la definición del Warehouse |
+| `images/` | Capturas usadas en este README |
 
 ---
 
@@ -1039,7 +1164,7 @@ RetailOLTP-Project-Fabric/
 
 | Limitación actual | Mejora propuesta |
 |---|---|
-| El origen no tiene fecha de modificación, así que Bronze lee las tablas completas | Agregar `ModifiedAt` o `rowversion`, o activar **CDC / Change Tracking** en SQL Server |
+| El origen no tiene fecha de modificación, así que el Copy Job lee las tablas completas | Agregar `ModifiedAt` o `rowversion` y usarla como columna incremental del Copy Job, o activar **CDC / Change Tracking** en SQL Server |
 | El filtro por fecha de negocio no captura cambios en registros con más de 30 días | Filtrar por fecha de ingesta o de modificación |
 | Las dimensiones sobrescriben el histórico (SCD tipo 1) y usan las claves de negocio | Implementar **SCD tipo 2** con **claves subrogadas** en `dim_customers` y `dim_products` |
 | Los IDs de Gold son `integer`, mientras que en el origen son `bigint` | Usar `bigint` en las claves de hechos de alto volumen |
@@ -1096,38 +1221,48 @@ RetailOLTP-Project-Fabric/
 [file-generator]: generator/generate_retail_data.py
 [file-warehouse]: sql/warehouse/
 
-[img-01-1]: docs/images/01-workspace-git-1.png
-[img-01-2]: docs/images/01-workspace-git-2.png
-[img-02]: docs/images/02-lakehouse.png
-[img-03]: docs/images/03-pipeline-creacion.png
-[img-04-01]: docs/images/04-copy-data-01.png
-[img-04-02]: docs/images/04-copy-data-02.png
-[img-04-03]: docs/images/04-copy-data-03.png
-[img-04-04]: docs/images/04-copy-data-04.png
-[img-04-05]: docs/images/04-copy-data-05.png
-[img-04-06]: docs/images/04-copy-data-06.png
-[img-04-07]: docs/images/04-copy-data-07.png
-[img-04-08]: docs/images/04-copy-data-08.png
-[img-04-09]: docs/images/04-copy-data-09.png
-[img-04-10]: docs/images/04-copy-data-10.png
-[img-05]: docs/images/05-dataflow-silver.png
-[img-06-01]: docs/images/06-notebooks-silver-01.png
-[img-06-02]: docs/images/06-notebooks-silver-02.png
-[img-06-03]: docs/images/06-notebooks-silver-03.png
-[img-06-04]: docs/images/06-notebooks-silver-04.png
-[img-06-05]: docs/images/06-notebooks-silver-05.png
-[img-06-06]: docs/images/06-notebooks-silver-06.png
-[img-07]: docs/images/07-modelo-estrella.png
-[img-08]: docs/images/08-warehouse.png
-[img-09-1]: docs/images/09-dim-calendar-1.png
-[img-09-2]: docs/images/09-dim-calendar-2.png
-[img-10-1]: docs/images/10-notebooks-gold-1.png
-[img-10-2]: docs/images/10-notebooks-gold-2.png
-[img-10-3]: docs/images/10-notebooks-gold-3.png
-[img-10-4]: docs/images/10-notebooks-gold-4.png
-[img-11-1]: docs/images/11-procedimientos-1.png
-[img-11-2]: docs/images/11-procedimientos-2.png
-[img-11-3]: docs/images/11-procedimientos-3.png
-[img-11-4]: docs/images/11-procedimientos-4.png
-[img-11-5]: docs/images/11-procedimientos-5.png
-[img
+[img-01-1]: images/01-workspace-git-1.png
+[img-01-2]: images/01-workspace-git-2.png
+[img-02]: images/02-lakehouse.png
+[img-03]: images/03-pipeline-creacion.png
+[img-04-01]: images/04-copy-data-01.png
+[img-04-02]: images/04-copy-data-02.png
+[img-04-03]: images/04-copy-data-03.png
+[img-04-04]: images/04-copy-data-04.png
+[img-04-05]: images/04-copy-data-05.png
+[img-04-06]: images/04-copy-data-06.png
+[img-04-07]: images/04-copy-data-07.png
+[img-04-08]: images/04-copy-data-08.png
+[img-04-09]: images/04-copy-data-09.png
+[img-04-10]: images/04-copy-data-10.png
+[img-05]: images/05-dataflow-silver.png
+[img-06-01]: images/06-notebooks-silver-01.png
+[img-06-02]: images/06-notebooks-silver-02.png
+[img-06-03]: images/06-notebooks-silver-03.png
+[img-06-04]: images/06-notebooks-silver-04.png
+[img-06-05]: images/06-notebooks-silver-05.png
+[img-06-06]: images/06-notebooks-silver-06.png
+[img-07]: images/07-modelo-estrella.png
+[img-08]: images/08-warehouse.png
+[img-09-1]: images/09-dim-calendar-1.png
+[img-09-2]: images/09-dim-calendar-2.png
+[img-10-1]: images/10-notebooks-gold-1.png
+[img-10-2]: images/10-notebooks-gold-2.png
+[img-10-3]: images/10-notebooks-gold-3.png
+[img-10-4]: images/10-notebooks-gold-4.png
+[img-11-1]: images/11-procedimientos-1.png
+[img-11-2]: images/11-procedimientos-2.png
+[img-11-3]: images/11-procedimientos-3.png
+[img-11-4]: images/11-procedimientos-4.png
+[img-11-5]: images/11-procedimientos-5.png
+[img-11-6]: images/11-procedimientos-6.png
+[img-12]: images/12-pipeline-completo.png
+[img-13-1]: images/13-parametros-1.png
+[img-13-2]: images/13-parametros-2.png
+[img-13-3]: images/13-parametros-3.png
+[img-13-4]: images/13-parametros-4.png
+[img-14-1]: images/14-programacion-1.png
+[img-14-2]: images/14-programacion-2.png
+[img-15]: images/15-pipeline-final.png
+[img-16]: images/16-workspace-final.png
+[img-17]: images/17-powerbi-directlake.png
