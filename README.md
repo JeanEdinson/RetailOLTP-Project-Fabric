@@ -1157,8 +1157,8 @@ RetailOLTP-Project-Fabric/
 [badge-linkedin]: https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white
 [badge-github-profile]: https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white
 
-[link-linkedin]: https://www.linkedin.com/in/TU-USUARIO
-[link-github]: https://github.com/TU-USUARIO
+[link-linkedin]: https://www.linkedin.com/in/jean-edinson-guevara-briones-4767bb1b3
+[link-github]: https://github.com/JeanEdinson
 
 [toc-1]: #resumen-del-proyecto
 [toc-2]: #arquitectura
