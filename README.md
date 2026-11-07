@@ -9,7 +9,6 @@
 ![Python][badge-python]
 ![PySpark][badge-pyspark]
 ![T-SQL][badge-tsql]
-![Power Query M][badge-m]
 ![Power BI][badge-powerbi]
 ![GitHub][badge-github]
 
@@ -66,7 +65,7 @@ El negocio quiere analizar sus ventas, devoluciones y pagos, pero los datos no e
 | Problema | Cómo se manifiesta |
 |---|---|
 | 🗄️ **Un sistema diseñado para operar, no para analizar** | El modelo está normalizado en 11 tablas. Cualquier reporte requiere muchos *joins* y compite por recursos con la operación diaria. |
-| 🧹 **Datos poco confiables** | Alrededor del 10 % de los registros tiene errores: `Activo`, `ACTIVE` y `A` para el mismo estado; `Electrónica` y `Electronics` como categorías distintas; emails sin `@`; cantidades negativas; descuentos de 150 %; pagos registrados antes del pedido; totales que no cuadran. |
+| 🧹 **Datos poco confiables** | Alrededor del 10 % de los registros tiene errores: `Activo`, `ACTIVE` y `A` para el mismo estado; `Electrónica` y `Electronics` como categorías distintas; cantidades negativas; descuentos de 150 %; totales que no cuadran. |
 | 👥 **Catálogos duplicados** | El mismo cliente, producto o tienda aparece varias veces con IDs distintos. Los conteos se inflan y las referencias se dispersan. |
 | 🔄 **Datos que cambian en el tiempo** | Clientes, productos y pedidos se modifican después de registrarse. Un análisis confiable debe reflejar esos cambios sin duplicar información. |
 | 🔒 **Datos aislados** | La información vive en un servidor local, fuera del alcance de herramientas analíticas en la nube. |
@@ -271,29 +270,6 @@ Por eso los datos se trasladan a un entorno **OLAP** separado y se remodelan en 
 - Pagos registrados entre 1 minuto y 24 horas después del pedido; devoluciones entre 1 y 60 días después.
 - Ciudades y departamentos del Perú.
 - Toda la generación se ejecuta en una transacción con `commit` y `rollback`.
-
-<details>
-<summary><b>🔍 Catálogo completo de inconsistencias simuladas</b></summary>
-
-<br>
-
-| Entidad | Inconsistencias introducidas |
-|---|---|
-| **Categories** | MAYÚSCULAS, minúsculas, espacios iniciales, traducción (`Electrónica`) |
-| **Suppliers** | Texto con espacios o mayúsculas, emails sin `@` o sin `.`, teléfonos mal formados, país (`PE`, `Perú`, `peru`, `Per`) |
-| **Customers** | Género (`M`, `Male`, `Hombre`, `X`, `N/A`, vacío), email, teléfono, estado (`A`, `ACTIVO`, `Inactivo`…), fecha de registro o de nacimiento nula |
-| **CustomerAddresses** | Tipo de dirección (`Casa`, `Domicilio`, `WORK`…), ciudad con formato sucio, país, código postal nulo |
-| **Stores** | Tipo de tienda y estado no estandarizados |
-| **Employees** | Estado no estandarizado |
-| **Products** | SKU con formatos distintos, **precio nulo**, **costo mayor al precio de venta**, estado |
-| **Orders** | Estado, **pedido anterior al registro del cliente**, total, subtotal y descuento alterados, envío nulo, **empleado de otra tienda** |
-| **OrderDetails** | **Cantidades negativas**, descuentos de **110 %, 150 % o −10 %**, total de línea y precio unitario alterados, descuento nulo |
-| **Payments** | Método (`Tarjeta`, `CARD`, `Efectivo`…), estado (`P`, `PAGADO`…), **pago anterior al pedido**, monto distinto al total |
-| **Returns** | **Devolución anterior al pedido**, **cantidad devuelta mayor a la vendida**, reembolso inflado, estado |
-
-Además, cada ejecución de `generate` vuelve a insertar los catálogos maestros. Eso genera **duplicados por columnas de negocio con IDs distintos**, que la capa Silver debe consolidar.
-
-</details>
 
 <details>
 <summary><b>📚 Fundamento técnico: ¿por qué generar datos sucios a propósito?</b></summary>
@@ -589,7 +565,7 @@ flowchart LR
 | `dim_products` | Products + Suppliers + Categories | Notebook PySpark |
 | `dim_employees` | Employees | Notebook PySpark |
 | `dim_stores` | Stores | Notebook PySpark |
-| `DimCalendar` | Generada | Dataflow Gen2 (M) |
+| `dim_calendar` | Generada | Dataflow Gen2 (M) |
 
 <details>
 <summary><b>📖 Diccionario de datos completo</b></summary>
@@ -1165,12 +1141,7 @@ RetailOLTP-Project-Fabric/
 | Limitación actual | Mejora propuesta |
 |---|---|
 | El origen no tiene fecha de modificación, así que el Copy Job lee las tablas completas | Agregar `ModifiedAt` o `rowversion` y usarla como columna incremental del Copy Job, o activar **CDC / Change Tracking** en SQL Server |
-| El filtro por fecha de negocio no captura cambios en registros con más de 30 días | Filtrar por fecha de ingesta o de modificación |
-| Las dimensiones sobrescriben el histórico (SCD tipo 1) y usan las claves de negocio | Implementar **SCD tipo 2** con **claves subrogadas** en `dim_customers` y `dim_products` |
-| Los IDs de Gold son `integer`, mientras que en el origen son `bigint` | Usar `bigint` en las claves de hechos de alto volumen |
-| Los registros eliminados en el origen no se reflejan en Gold | Agregar *soft delete* o detección de bajas |
 | El reporte de Power BI solo valida la conexión | Dashboard con KPIs de ventas, devoluciones y calidad de datos |
-| No hay trazabilidad por ejecución | Tabla de log con filas insertadas y actualizadas por `BatchID` |
 
 ---
 
