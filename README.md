@@ -290,8 +290,6 @@ Al controlar qué errores existen y en qué proporción, cada regla de limpieza 
 
    ![Integración del workspace con GitHub][img-01-1]
 
-   ![Repositorio conectado][img-01-2]
-
 2. **Lakehouse `RetailOLTP_Project_Bronze_Silver`**, que contiene las capas Bronze y Silver.
 
    ![Lakehouse Bronze/Silver][img-02]
@@ -350,8 +348,6 @@ Configurarlo antes de desarrollar asegura que **todo** el proyecto quede version
 ![Copy Job 08][img-04-08]
 
 ![Copy Job 09][img-04-09]
-
-![Copy Job 10][img-04-10]
 
 </details>
 
@@ -1193,7 +1189,6 @@ RetailOLTP-Project-Fabric/
 [file-warehouse]: sql/warehouse/
 
 [img-01-1]: images/01-workspace-git-1.png
-[img-01-2]: images/01-workspace-git-2.png
 [img-02]: images/02-lakehouse.png
 [img-03]: images/03-pipeline-creacion.png
 [img-04-01]: images/04-copy-data-01.png
@@ -1205,7 +1200,6 @@ RetailOLTP-Project-Fabric/
 [img-04-07]: images/04-copy-data-07.png
 [img-04-08]: images/04-copy-data-08.png
 [img-04-09]: images/04-copy-data-09.png
-[img-04-10]: images/04-copy-data-10.png
 [img-05]: images/05-dataflow-silver.png
 [img-06-01]: images/06-notebooks-silver-01.png
 [img-06-02]: images/06-notebooks-silver-02.png
