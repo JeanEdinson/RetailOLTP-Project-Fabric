@@ -933,8 +933,6 @@ Se definen **una sola vez** a nivel de pipeline y se pasan a cada notebook que l
 
 ![Parámetros 03][img-13-3]
 
-![Parámetros 04][img-13-4]
-
 </details>
 
 ### Políticas de ejecución
@@ -1219,7 +1217,6 @@ RetailOLTP-Project-Fabric/
 [img-13-1]: images/13-parametros-1.png
 [img-13-2]: images/13-parametros-2.png
 [img-13-3]: images/13-parametros-3.png
-[img-13-4]: images/13-parametros-4.png
 [img-14-1]: images/14-programacion-1.png
 [img-14-2]: images/14-programacion-2.png
 [img-15]: images/15-pipeline-final.png
