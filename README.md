@@ -471,10 +471,6 @@ flowchart LR
 
 ![Notebooks Silver 04][img-06-04]
 
-![Notebooks Silver 05][img-06-05]
-
-![Notebooks Silver 06][img-06-06]
-
 </details>
 
 <details>
@@ -1205,8 +1201,6 @@ RetailOLTP-Project-Fabric/
 [img-06-02]: images/06-notebooks-silver-02.png
 [img-06-03]: images/06-notebooks-silver-03.png
 [img-06-04]: images/06-notebooks-silver-04.png
-[img-06-05]: images/06-notebooks-silver-05.png
-[img-06-06]: images/06-notebooks-silver-06.png
 [img-07]: images/07-modelo-estrella.png
 [img-08]: images/08-warehouse.png
 [img-09-1]: images/09-dim-calendar-1.png
